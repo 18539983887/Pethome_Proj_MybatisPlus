@@ -1,0 +1,46 @@
+server:
+  port: 8080 #端口号，默认是8080
+  servlet:
+    context-path: / #上下文路径，默认是/
+#连接数据库的四个必要参数，其他数据源参数有默认值
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///pro_pethome?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 1234
+  output:
+    ansi:
+      enabled: ALWAYS
+mybatis-plus:
+  type-aliases-package: com.qpf.org.pojo,com.qpf.org.dto
+    #mapper-locations: classpath*:/mapper/**/*.xml # 映射文件所在位置
+    #configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # mybatisplus的日志配置
+  #map-underscore-to-camel-case: true  #是否开启驼峰命名（默认true）
+  #use-generated-keys: true  #自动生成主键时，是否返回主键（默认true）
+  global-config:
+    db-config:
+      id-type: auto    #全局ID生成策略
+      #table-prefix: tbl_  #全局表名前缀
+      #logic-delete-field: deleted      #全局逻辑删除字段名
+      #logic-not-delete-value: 0        #全局逻辑删除字面值：未删除为0
+      #logic-delete-value: -1           #全局逻辑删除字面值：删除为-1
+#数据源配置
+#  redis:
+#    database: 0
+#    host: 127.0.0.1
+#    port: 6379
+#    password: 123456
+#    jedis:
+#      pool:
+#        max-wait: 2000ms
+#        max-active: 8
+
+#配置别名 和扫描mapper文件【约定大于配置】
+#mybatis:
+#  type-aliases-package: com.qpf.org.pojo,com.qpf.org.dto
+#配置日志等级
+logging:
+  level:
+    com.qpf: trace

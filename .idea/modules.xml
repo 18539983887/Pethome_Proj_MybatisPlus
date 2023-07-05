@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/pethome_Server/pethome_Server.iml" filepath="$PROJECT_DIR$/pethome_Server/pethome_Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pethome_view_admin/pethome_view_admin.iml" filepath="$PROJECT_DIR$/pethome_view_admin/pethome_view_admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pethome_view_user/pethome_view_user.iml" filepath="$PROJECT_DIR$/pethome_view_user/pethome_view_user.iml" />
+    </modules>
+  </component>
+</project>
