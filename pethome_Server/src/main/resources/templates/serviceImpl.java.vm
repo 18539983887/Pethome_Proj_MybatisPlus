@@ -1,0 +1,78 @@
+package ${package.ServiceImpl};
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import ${package.Mapper}.${table.mapperName};
+import ${cfg.parent}.dto.${entity}Dto;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 业务实现类：$!{table.comment}
+ */
+@Service
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+
+        }
+#else
+public class ${table.serviceImplName} implements ${table.serviceName} {
+
+    @Autowired
+    private ${table.mapperName} ${table.entityPath}Mapper;
+
+    @Override
+    public void add(${entity} ${table.entityPath}){
+        ${table.entityPath}Mapper.insert(${table.entityPath});
+    }
+
+    @Override
+    public void deleteById(Long id){
+        ${table.entityPath}Mapper.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void patchDel(List<Long> ids){
+        ${table.entityPath}Mapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    public void updateById(${entity} ${table.entityPath}){
+        ${table.entityPath}Mapper.updateById(${table.entityPath});
+    }
+
+    @Override
+    public ${entity} findOne(Long id){
+        return ${table.entityPath}Mapper.selectById(id);
+    }
+
+    @Override
+    public List<${entity}>findAll(){
+        return ${table.entityPath}Mapper.selectList(null);
+    }
+
+    @Override
+    public IPage<${entity}>findByPage(${entity}Dto ${table.entityPath}Dto){
+        //1.创建查询条件
+        QueryWrapper<${entity}> qw = new QueryWrapper<>();
+        //qw.like("xxx",${table.entityPath}Dto.getXxx());
+        //qw.or();
+        //qw.like("xxx",${table.entityPath}Dto.getXxx());
+        //2.组件分页数据
+        IPage<${entity}> page = new Page<>(${table.entityPath}Dto.getCurrentPage(), ${table.entityPath}Dto.getPageSize());
+        page.setRecords(${table.entityPath}Mapper.findByPage(page,qw));
+        page.setTotal(${table.entityPath}Mapper.selectCount(qw));
+        //3.返回
+        return page;
+    }
+}
+#end

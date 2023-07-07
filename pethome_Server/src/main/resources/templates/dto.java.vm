@@ -1,0 +1,9 @@
+package ${cfg.parent}.dto;
+
+import ${cfg.basic}.dto.BasePageDto;
+
+/**
+ * 查询类：
+ */
+public class ${table.entityName}Dto extends BasePageDto{
+}

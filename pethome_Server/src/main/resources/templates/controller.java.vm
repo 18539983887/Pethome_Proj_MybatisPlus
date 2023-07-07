@@ -1,0 +1,90 @@
+package ${package.Controller};
+
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+import ${cfg.parent}.dto.${entity}Dto;
+import ${cfg.basic}.vo.AjaxResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
+
+/**
+* 后端接口类；
+*/
+@RestController
+@RequestMapping("/${table.entityPath}")
+public class ${entity}Controller {
+
+    @Autowired
+    public ${table.serviceName} ${table.entityPath}Service;
+
+    /**
+     * 接口：添加或修改
+     * @param ${table.entityPath} 传递的实体
+     * @return AjaxResult 响应给前端
+     */
+    @PutMapping
+    public AjaxResult addOrUpdate(@RequestBody ${entity} ${table.entityPath}) {
+        if ( ${table.entityPath}.getId() != null){
+            ${table.entityPath}Service.updateById(${table.entityPath});
+        }else{
+            ${table.entityPath}Service.add(${table.entityPath});
+        }
+        return new AjaxResult();
+
+    }
+
+    /**
+    * 接口：删除
+    * @param id
+    * @return AjaxResult 响应给前端
+    */
+    @DeleteMapping(value = "/{id}")
+    public AjaxResult del(@PathVariable("id") Long id) {
+        ${table.entityPath}Service.deleteById(id);
+        return new AjaxResult();
+    }
+
+    /**
+    * 接口：批量删除
+    * @param ids
+    * @return AjaxResult 响应给前端
+    */
+    @PatchMapping
+    public AjaxResult patchDel(@RequestBody List<Long> ids) {
+        ${table.entityPath}Service.patchDel(ids);
+        return new AjaxResult();
+    }
+
+    /**
+    * 接口：查询单个对象
+    * @param id
+    */
+    @GetMapping("/{id}")
+    public ${entity} findOne(@PathVariable("id") Long id) {
+        return ${table.entityPath}Service.findOne(id);
+    }
+
+
+    /**
+    * 接口：查询所有
+    * @return
+    */
+    @GetMapping
+    public List<${entity}> findAll() {
+        return ${table.entityPath}Service.findAll();
+    }
+
+
+    /**
+     * 接口：分页查询或高级查询
+     * @param ${table.entityPath}Dto 查询对象
+     * @return IPage<${entity}> 分页对象
+     */
+    @PostMapping
+    public IPage<${entity}> findByPage(@RequestBody ${entity}Dto ${table.entityPath}Dto) {
+        return ${table.entityPath}Service.findByPage(${table.entityPath}Dto);
+    }
+}
