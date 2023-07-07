@@ -24,6 +24,7 @@ import java.util.*;
 public class DepartmentServiceImpl implements IDepartmentService {
     @Autowired
     private DepartmentMapper departmentMapper;
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @Override
