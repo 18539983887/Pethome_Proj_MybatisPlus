@@ -15,17 +15,18 @@ import com.qpf.org.service.IDepartmentService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@CacheConfig(cacheNames = "department")
 public class DepartmentServiceImpl implements IDepartmentService {
     @Autowired
     private DepartmentMapper departmentMapper;
-    @Autowired
-    private RedisTemplate redisTemplate;
+
 
     @Override
     public void add(Department department) {
@@ -33,8 +34,8 @@ public class DepartmentServiceImpl implements IDepartmentService {
     }
 
     @Override
+    @CacheEvict(key = "#id")
     public void delById(Long id) {
-
         departmentMapper.deleteById(id);
     }
 
@@ -50,6 +51,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
     }
 
     @Override
+    @CachePut(key = "#id")
     public Department findOne(Long id) {
         return departmentMapper.selectById(id);
     }
@@ -72,32 +74,56 @@ public class DepartmentServiceImpl implements IDepartmentService {
         return page;
     }
 
+    //    @Override
+//    public List<Department> getDeptTree() {
+//        List<Department> deptTree = (List<Department>) redisTemplate.boundValueOps("deptTree").get();
+//        if(ObjectUtil.isEmpty(deptTree)){
+//            List<Department> departmentList = departmentMapper.selectList(null);
+//
+//            Map<Long, Department> map = new HashMap<>();
+//            for (Department department : departmentList) {
+//                map.put(department.getId(), department);
+//            }
+//            deptTree = new ArrayList<>();
+//            for (Department department : departmentList) {
+//                if (department.getParentId() == null) {
+//                    deptTree.add(department);
+//                }else {
+//                    Long parent_id=department.getParentId();
+//                    Department parentDepartment = map.get(parent_id);
+//
+//                    parentDepartment.getChildren().add(department);
+//                }
+//            }
+//            redisTemplate.boundValueOps("deptTree").set(deptTree);
+//            System.out.println("查数据库");
+//        }else {
+//            redisTemplate.boundValueOps("deptTree").get();
+//            System.out.println("查redis缓存");
+//        }
+//        return deptTree;
+//
+//    }
     @Override
+    @Cacheable(key = "'deptTree1'",unless = "#result == null" )
     public List<Department> getDeptTree() {
-        List<Department> deptTree = (List<Department>) redisTemplate.boundValueOps("deptTree").get();
-        if(ObjectUtil.isEmpty(deptTree)){
-            List<Department> departmentList = departmentMapper.selectList(null);
 
-            Map<Long, Department> map = new HashMap<>();
-            for (Department department : departmentList) {
-                map.put(department.getId(), department);
-            }
-            deptTree = new ArrayList<>();
-            for (Department department : departmentList) {
-                if (department.getParentId() == null) {
-                    deptTree.add(department);
-                }else {
-                    Long parent_id=department.getParentId();
-                    Department parentDepartment = map.get(parent_id);
+        List<Department> departmentList = departmentMapper.selectList(null);
 
-                    parentDepartment.getChildren().add(department);
-                }
+        Map<Long, Department> map = new HashMap<>();
+        for (Department department : departmentList) {
+            map.put(department.getId(), department);
+        }
+        List<Department> deptTree = new ArrayList<>();
+        for (Department department : departmentList) {
+            if (department.getParentId() == null) {
+                deptTree.add(department);
+            } else {
+                Long parent_id = department.getParentId();
+                Department parentDepartment = map.get(parent_id);
+
+                parentDepartment.getChildren().add(department);
             }
-            redisTemplate.boundValueOps("deptTree").set(deptTree);
-            System.out.println("查数据库");
-        }else {
-            redisTemplate.boundValueOps("deptTree").get();
-            System.out.println("查redis缓存");
         }
         return deptTree;
 

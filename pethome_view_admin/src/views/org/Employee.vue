@@ -35,6 +35,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="dept.name" label="所属部门" width="120" sortable>
+
       </el-table-column>
       <el-table-column prop="departmentId" label="员工类型" width="150" sortable>
         <template scope="scope">
@@ -66,7 +67,7 @@
     <!--编辑界面-->
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="姓名" prop="username">
           <el-input v-model="editForm.username" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话"prop="phone">
@@ -76,7 +77,7 @@
           <el-input v-model="editForm.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="密钥"prop="password">
-          <el-input v-model="editForm.salt" auto-complete="off" placeholder="pethome"></el-input>
+          <el-input v-model="editForm.password" auto-complete="off" placeholder="pethome"></el-input>
         </el-form-item>
         <!--<el-form-item label="新密码">-->
         <!--  <el-input v-model="editForm.password" auto-complete="off"  ></el-input>-->
@@ -90,11 +91,17 @@
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属部门" prop="departmentId">
-          <el-select v-model="editForm.departmentId" placeholder="请选择">
+        <el-form-item label="所属部门">
+          <el-select v-model="editForm.departmentId" placeholder="请选择" >
+              <el-option v-for="item in departments"
+                         :label="item.name"
+                         :value="item.sn">
+                <span style="float: left">{{ item.name }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
+              </el-option>
+          </el-select>
 <!--            <el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
 <!--            </el-option>-->
-          </el-select>
         </el-form-item>
         <el-form-item label="所属店铺" prop="shopId">
           <el-select v-model="editForm.shopId" placeholder="请选择">
@@ -136,14 +143,18 @@
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属部门" prop="departmentId">
+        <el-form-item label="所属部门" >
           <el-select v-model="addForm.departmentId" placeholder="请选择">
-            <!--<el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
-            <!--</el-option>-->
+              <el-option v-for="item in departments"
+                         :label="item.name"
+                         :value="item.sn">
+                <span style="float: left">{{ item.name }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
+              </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属店铺" prop="shopId">
-          <el-select v-model="addForm.shopId" placeholder="请选择">
+          <el-select v-model="addForm" placeholder="请选择">
             <!--<el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
             <!--</el-option>-->
           </el-select>
@@ -185,7 +196,17 @@ export default {
       },
       //编辑界面数据
       editForm: {
+        id: null,
+        username: '',
+        phone: '',
+        email: 1,
+        salt: null,
+        age: null,
+        state:1,
+        shopId:null
       },
+
+      departments: [],
 
       addFormVisible: false,//新增界面是否显示
       addLoading: false,
@@ -338,7 +359,9 @@ export default {
     //8.显示编辑界面
     handleEdit: function (index, row) {
       this.editForm = Object.assign({}, row);
+      this.getDepartment();
       this.editFormVisible = true;
+
     },
 
     //9.显示新增界面
@@ -377,6 +400,11 @@ export default {
           });
         }
       });
+    },
+    getDepartment(){
+      this.$http.get("/department").then(res=>{
+        this.departments = res.data;
+      })
     },
 
     //11.新增

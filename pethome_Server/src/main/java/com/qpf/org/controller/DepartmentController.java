@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qpf.basic.vo.AjaxResult;
 import com.qpf.org.dto.DepartmentDto;
 import com.qpf.org.pojo.Department;
+import com.qpf.org.pojo.Employee;
 import com.qpf.org.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,12 @@ public class DepartmentController {
     public IPage<Department> findByPage(@RequestBody DepartmentDto departmentDto) {
 
         return idepartmentService.findByPage(departmentDto);
+    }
+    @GetMapping
+    public List<Department> findAll(){
+        System.out.println(idepartmentService.findAll());
+        return idepartmentService.findAll();
+
     }
 //查询单个
     @GetMapping("/{id}")
