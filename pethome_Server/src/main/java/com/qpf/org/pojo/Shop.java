@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -45,6 +47,7 @@ public class Shop implements Serializable {
      * 店铺管理员ID
      */
     private Long adminId;
-
+    @TableField(exist = false)
+    private Employee admin;
 
 }

@@ -87,4 +87,15 @@ public class ShopController {
     public IPage<Shop> findByPage(@RequestBody ShopDto shopDto) {
         return shopService.findByPage(shopDto);
     }
+
+    /**
+     * 商家入驻
+     * @param id
+     * @return
+     */
+    @PostMapping(value = "/settlement")
+    public AjaxResult settlement(@RequestBody Shop shop) {
+        shopService.settlement(shop);
+        return new AjaxResult();
+    }
 }

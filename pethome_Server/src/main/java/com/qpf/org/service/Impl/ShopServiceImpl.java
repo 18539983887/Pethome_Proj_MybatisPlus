@@ -25,48 +25,54 @@ public class ShopServiceImpl implements IShopService {
     private ShopMapper shopMapper;
 
     @Override
-    public void add(Shop shop){
+    public void add(Shop shop) {
         shopMapper.insert(shop);
     }
 
     @Override
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         shopMapper.deleteById(id);
     }
 
     @Transactional
     @Override
-    public void patchDel(List<Long> ids){
+    public void patchDel(List<Long> ids) {
         shopMapper.deleteBatchIds(ids);
     }
 
     @Override
-    public void updateById(Shop shop){
+    public void updateById(Shop shop) {
         shopMapper.updateById(shop);
     }
 
     @Override
-    public Shop findOne(Long id){
+    public Shop findOne(Long id) {
         return shopMapper.selectById(id);
     }
 
     @Override
-    public List<Shop>findAll(){
+    public List<Shop> findAll() {
         return shopMapper.selectList(null);
     }
 
     @Override
-    public IPage<Shop>findByPage(ShopDto shopDto){
+    public IPage<Shop> findByPage(ShopDto shopDto) {
         //1.创建查询条件
         QueryWrapper<Shop> qw = new QueryWrapper<>();
-        qw.like("name",shopDto.getKeyword());
+        qw.like("name", shopDto.getKeyword());
         qw.or();
-        qw.like("tel",shopDto.getKeyword());
+        qw.like("tel", shopDto.getKeyword());
 
         IPage<Shop> page = new Page<>(shopDto.getCurrentPage(), shopDto.getPageSize());
-        page.setRecords(shopMapper.findByPage(page,qw));
+        page.setRecords(shopMapper.findByPage(page, qw));
         page.setTotal(shopMapper.selectCount(qw));
         //3.返回
         return page;
+    }
+
+    @Transactional
+    @Override
+    public void settlement(Shop shop) {
+
     }
 }

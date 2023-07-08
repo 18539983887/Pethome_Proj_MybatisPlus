@@ -12,11 +12,18 @@ import echarts from './views/charts/echarts.vue'
 import Department from "./views/org/Department";
 import Employee from "./views/org/Employee.vue";
 import Shop from "./views/org/Shop.vue";
+import ShopRegister from './views/ShopRegister.vue'
 
 let routes = [
   {
     path: '/login',
     component: Login,
+    name: '',
+    hidden: true
+  },
+  {
+    path: '/shopRegister',
+    component: ShopRegister,
     name: '',
     hidden: true
   },

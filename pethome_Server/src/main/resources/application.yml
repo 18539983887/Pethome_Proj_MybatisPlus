@@ -43,6 +43,20 @@ mybatis-plus:
         #logic-delete-field: deleted      #全局逻辑删除字段名
         #logic-not-delete-value: 0        #全局逻辑删除字面值：未删除为0
       #logic-delete-value: -1           #全局逻辑删除字面值：删除为-1
+# ===================================================================
+# 分布式文件系统FDFS配置
+# ===================================================================
+
 logging:
   level:
     com.qpf: trace
+fdfs:
+  so-timeout: 1500
+  connect-timeout: 600
+  #缩略图生成参数
+  thumb-image:
+    width: 150
+    height: 150
+  #TrackerList参数,支持多个
+  tracker-list: 192.168.136.133:22122
+  web-server-url: http://192.168.136.133:8888/

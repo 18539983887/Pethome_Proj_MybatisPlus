@@ -53,4 +53,7 @@ public interface IShopService {
      * @return
      */
     IPage<Shop> findByPage(ShopDto shopDto);
+
+    void settlement(Shop shop);
+
 }

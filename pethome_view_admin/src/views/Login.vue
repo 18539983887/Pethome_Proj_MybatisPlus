@@ -10,7 +10,9 @@
     </el-form-item>
     <el-checkbox v-model="checked" checked class="password">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" :loading="logining">登录
+      <el-button type="primary" style="width:48%;" @click.native.prevent="handleSubmit" :loading="logining">登录
+      </el-button>
+      <el-button type="primary" style="width:48%;" @click.native.prevent="shopRegister" :loading="logining">商家入驻
       </el-button>
       <!--<el-button @click.native.prevent="handleReset">重置</el-button>-->
     </el-form-item>
@@ -42,8 +44,8 @@ export default {
     };
   },
   methods: {
-    handleReset() {
-      this.$refs.loginForm.resetFields();
+    shopRegister() {
+      this.$router.push({path: '/shopRegister'});
     },
     handleSubmit(ev) {
       var _this = this;
