@@ -1,15 +1,14 @@
 server:
   port: 8080 #???????8080
   servlet:
-    context-path: / #?????????/
-#????????????????????????
+    context-path: /
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql:///pro_pethome?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: 1234
-
 
   #?????
   redis:
@@ -20,36 +19,31 @@ spring:
     jedis:
       pool:
         max-wait: 2000ms
-        min-idle: 2
-        max-idle: 8
+        max-active: 8
 
-    #???? ???mapper??????????
+## springdoc-openapi??
+springdoc:
+  api-docs:
+    path: /v3/api-docs  #swagger??????
+    enabled: true #????????
+  swagger-ui:
+    path: /swagger-ui.html  #???swagger?????????http:127.0.0.1:8080/swagger-ui.html???????swagger??
+    tags-sorter: alpha      #tag????????????
+    operations-sorter: alpha  #operations????????????
+  group-configs:
+    - group: 'default'      #??
+      paths-to-match: '/**' #????????
+      packages-to-scan: com.qpf   #???????????????
+# knife4j???????????????
+knife4j:
+  enable: true
+  setting:
 
-    #??????
+    language: zh_cn
 
-
-    #MybatisPlus配置
-mybatis-plus:
-  type-aliases-package: com.cyf.org.pojo,com.qpf.org.dto  # 别名包
-    #mapper-locations: classpath*:/mapper/**/*.xml # 映射文件所在位置
-    #configuration:
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # mybatisplus的日志配置
-    #map-underscore-to-camel-case: true  #是否开启驼峰命名（默认true）
-  #use-generated-keys: true  #自动生成主键时，是否返回主键（默认true）
-  global-config:
-    db-config:
-      id-type: auto       #全局ID生成策略
-      table-prefix: t_    #全局表名前缀
-        #logic-delete-field: deleted      #全局逻辑删除字段名
-        #logic-not-delete-value: 0        #全局逻辑删除字面值：未删除为0
-      #logic-delete-value: -1           #全局逻辑删除字面值：删除为-1
 # ===================================================================
 # 分布式文件系统FDFS配置
 # ===================================================================
-
-logging:
-  level:
-    com.qpf: trace
 fdfs:
   so-timeout: 1500
   connect-timeout: 600
@@ -60,3 +54,30 @@ fdfs:
   #TrackerList参数,支持多个
   tracker-list: 192.168.136.133:22122
   web-server-url: http://192.168.136.133:8888/
+
+#MybatisPlus配置
+mybatis-plus:
+  type-aliases-package: com.qpf.org.pojo,com.qpf.org.dto  # 别名包
+    #mapper-locations: classpath*:/mapper/**/*.xml # 映射文件所在位置
+    #configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # mybatisplus的日志配置
+  #map-underscore-to-camel-case: true  #是否开启驼峰命名（默认true）
+  #use-generated-keys: true  #自动生成主键时，是否返回主键（默认true）
+  global-config:
+    db-config:
+      id-type: auto       #全局ID生成策略
+      table-prefix: t_  	#全局表名前缀
+      #logic-delete-field: deleted      #全局逻辑删除字段名
+      #logic-not-delete-value: 0        #全局逻辑删除字面值：未删除为0
+      #logic-delete-value: -1           #全局逻辑删除字面值：删除为-1
+logging:
+  level:
+    #    com.hjj: trace
+    com.qpf: debug
+
+# Miniio配置
+minio:
+  endpoint: http://127.0.0.1:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: blog

@@ -90,10 +90,10 @@ public class ShopController {
 
     /**
      * 商家入驻
-     * @param id
+     * @param shop
      * @return
      */
-    @PostMapping(value = "/settlement")
+    @PostMapping( "/settlement")
     public AjaxResult settlement(@RequestBody Shop shop) {
         shopService.settlement(shop);
         return new AjaxResult();

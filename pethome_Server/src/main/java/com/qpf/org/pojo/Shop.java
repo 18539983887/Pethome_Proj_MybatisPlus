@@ -30,7 +30,8 @@ public class Shop implements Serializable {
     /**
      * 入驻时间
      */
-    private LocalDate registerTime;
+
+    private Date registerTime;
     /**
      * 店铺状态：1待审核，2审核通过待激活，3激活成功，4驳回
      */
@@ -47,6 +48,9 @@ public class Shop implements Serializable {
      * 店铺管理员ID
      */
     private Long adminId;
+    /**
+     * 店铺管理员对象，用于查询是否已经存在店铺
+     */
     @TableField(exist = false)
     private Employee admin;
 

@@ -150,7 +150,7 @@ export default {
   data() {
     return {
       //列表显示图片的前缀
-      imgPrefix: "http://dfs.java.itsource.cn",
+      imgPrefix: "http://192.168.136.133:8888/",
 
       //分页显示所属数据
       shops: [],
@@ -160,7 +160,7 @@ export default {
       totals: 0,
 
       //高级查询所需数据
-      keyword: null,
+      keyword: "",
 
       //多条数据选中
       sels: [],//列表选中列
@@ -205,8 +205,8 @@ export default {
       };
       this.listLoading = true;
       this.$http.post("/shop",paras).then(res=>{
-        this.totals = res.data.totals;
-        this.shops = res.data.data;
+        this.totals = res.data.total;
+        this.shops = res.data.records;
         this.listLoading = false;
       }).catch(res => {
         this.$message.error("获取分页数据失败!!!");
