@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qpf.basic.exception.BusinessException;
+import com.qpf.basic.service.impl.FastDfsServiceImpl;
+import com.qpf.basic.utils.BaiduAuditUtils;
 import com.qpf.org.mapper.EmployeeMapper;
 import com.qpf.org.pojo.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class ShopServiceImpl implements IShopService {
     private ShopMapper shopMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private FastDfsServiceImpl fastDfsService;
 
     @Override
     public void add(Shop shop) {
@@ -80,6 +84,14 @@ public class ShopServiceImpl implements IShopService {
     @Transactional
     @Override
     public void settlement(Shop shop) {
+        //0.使用百度AI智能审核
+        if (!BaiduAuditUtils.TextCensor(shop.getName())) {
+            throw new BusinessException("店铺名称不合法!!!");
+        }
+        byte[] imgBys = fastDfsService.downloadFile(shop.getLogo());
+        if (!BaiduAuditUtils.ImgCensor(imgBys)) {
+            throw new BusinessException("店铺LOGO不合法!!!");
+        }
         //通过查询前端传过来的shop对象的admin变量是否为空，来判断是否填写的管理员
         Employee shopManager = shop.getAdmin();
         if (ObjectUtil.isEmpty(shopManager)) {

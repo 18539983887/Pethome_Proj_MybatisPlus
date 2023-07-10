@@ -98,4 +98,5 @@ public class ShopController {
         shopService.settlement(shop);
         return new AjaxResult();
     }
+
 }
