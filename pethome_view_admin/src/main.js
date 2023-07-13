@@ -20,7 +20,7 @@ import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8080/'
 //全局属性配置，在任意组件内可以使用this.$http获取axios对象
 Vue.prototype.$http = axios
-Vue.prototype.$http.imgPrefix="http://192.168.136.133:8888"
+Vue.prototype.$http.imgPrefix="http://192.168.136.133:8888/"
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)

@@ -20,7 +20,17 @@ spring:
       pool:
         max-wait: 2000ms
         max-active: 8
-
+  mail:
+    host: smtp.qq.com   # 设置邮箱主机(服务商),这里使用QQ邮件服务器
+    username: 1732019838@qq.com  # 设置用户名 - 发送方
+    password: bxkteuttjnhxfcfa   # 设置密码，该处的密码是QQ邮箱开启SMTP的授权码而非QQ密码
+    properties:
+      mail:
+        smtp:
+          auth: true  # 必须进行授权认证，它的目的就是阻止他人任意乱发邮件
+          starttls: #SMTP加密方式:连接到一个TLS保护连接
+            enable: true
+            required: true
 ## springdoc-openapi??
 springdoc:
   api-docs:
@@ -54,6 +64,10 @@ fdfs:
   #TrackerList参数,支持多个
   tracker-list: 192.168.136.133:22122
   web-server-url: http://192.168.136.133:8888/
+  pool:
+    max-total: 200   # 连接池最大数量
+    max-total-per-key: 50  # 单个tracker最大连接数
+    max-wait-millis: 5000 # 连接耗尽最大等待时间 毫秒
 
 #MybatisPlus配置
 mybatis-plus:

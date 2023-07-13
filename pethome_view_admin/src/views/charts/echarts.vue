@@ -34,22 +34,54 @@
         },
 
         methods: {
-            drawColumnChart() {
-                this.chartColumn = echarts.init(document.getElementById('chartColumn'));
-                this.chartColumn.setOption({
-                  title: { text: 'Column Chart' },
-                  tooltip: {},
-                  xAxis: {
-                      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-                  },
-                  yAxis: {},
-                  series: [{
-                      name: '销量',
-                      type: 'bar',
-                      data: [5, 20, 36, 10, 10, 20]
-                    }]
-                });
-            },
+          //柱状图：实现展示每个店铺状态的个数
+          drawColumnChart() {
+            //后端要给两个数组：x坐标=状态["待审核","待激活","激活成功","驳回"]   y左标=个数[2,3,5,1]
+            //1.将两个数组封装成一个对象-后端代码多
+            //2.后端返回一个集合：[{state:"待审核",num:2},{state:"待激活",num:3}]
+            this.$http.get("/echarts/shop").then(res => {
+              //指定柱状图初始化位置，开始初始化
+              this.chartColumn = echarts.init(document.getElementById('chartColumn'));
+              var arr = res.data;
+              var states = arr.map(obj => {
+                return obj.state;
+              });
+              // var stateNames = arr.map(obj => {
+              //   return obj.stateName;
+              // });
+              var countNums = arr.map(obj => {
+                return obj.countNum;
+              })
+              //将状态的1234 - 转成待审核,待激活,激活成功,驳回
+              for (let i = 0; i < states.length; i++) {
+                if (states[i] == 1) {
+                  states.splice(i, 1, "待审核"); //替换 i表示下标 1 表示从下标往后替换多少个
+                }
+                if (states[i] == 2) {
+                  states.splice(i, 1, "待激活");
+                }
+                if (states[i] == 3) {
+                  states.splice(i, 1, "激活成功");
+                }
+                if (states[i] == 4) {
+                  states.splice(i, 1, "驳回");
+                }
+              }
+              this.chartColumn.setOption({
+                title: {text: '店铺状态分布'},
+                tooltip: {},
+                xAxis: {
+                  data: states
+                },
+                yAxis: {}, //y轴数据会根据data集合中的数据自动平均分配
+                series: [{
+                  name: '销量',
+                  type: 'bar',
+                  data: countNums //就一个一个集合按照状态升序的
+                }]
+              });
+            });
+          },
             drawBarChart() {
                 this.chartBar = echarts.init(document.getElementById('chartBar'));
                 this.chartBar.setOption({

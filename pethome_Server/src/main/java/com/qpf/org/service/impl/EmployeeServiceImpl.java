@@ -1,4 +1,4 @@
-package com.qpf.org.service.Impl;
+package com.qpf.org.service.impl;
 
 //import com.github.pagehelper.PageHelper;
 //import com.github.pagehelper.PageInfo;

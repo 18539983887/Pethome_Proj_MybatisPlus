@@ -13,6 +13,7 @@ import Department from "./views/org/Department";
 import Employee from "./views/org/Employee.vue";
 import Shop from "./views/org/Shop.vue";
 import ShopRegister from './views/ShopRegister.vue'
+import ShopRegisterEdit from './views/ShopRegisterEdit.vue'
 
 let routes = [
   {
@@ -24,6 +25,12 @@ let routes = [
   {
     path: '/shopRegister',
     component: ShopRegister,
+    name: '',
+    hidden: true
+  },
+  {
+    path: '/registerEdit/:shopId',
+    component: ShopRegisterEdit,
     name: '',
     hidden: true
   },

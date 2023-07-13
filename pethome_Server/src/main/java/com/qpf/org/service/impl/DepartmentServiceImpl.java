@@ -1,22 +1,17 @@
-package com.qpf.org.service.Impl;
+package com.qpf.org.service.impl;
 
 //import com.github.pagehelper.PageHelper;
 //import com.github.pagehelper.PageInfo;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.qpf.basic.vo.AjaxResult;
 import com.qpf.org.dto.DepartmentDto;
 import com.qpf.org.mapper.DepartmentMapper;
 import com.qpf.org.pojo.Department;
 import com.qpf.org.service.IDepartmentService;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

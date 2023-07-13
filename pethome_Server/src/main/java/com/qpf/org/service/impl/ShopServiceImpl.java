@@ -1,4 +1,4 @@
-package com.qpf.org.service.Impl;
+package com.qpf.org.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,17 +8,23 @@ import com.qpf.basic.exception.BusinessException;
 import com.qpf.basic.service.impl.FastDfsServiceImpl;
 import com.qpf.basic.utils.BaiduAuditUtils;
 import com.qpf.org.mapper.EmployeeMapper;
+import com.qpf.org.mapper.ShopAuditLogMapper;
 import com.qpf.org.pojo.Employee;
+import com.qpf.org.pojo.ShopAuditLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.qpf.org.pojo.Shop;
 import com.qpf.org.service.IShopService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qpf.org.mapper.ShopMapper;
 import com.qpf.org.dto.ShopDto;
 
-import java.util.Arrays;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -29,11 +35,18 @@ import java.util.List;
 public class ShopServiceImpl implements IShopService {
 
     @Autowired
-    private ShopMapper shopMapper;
+    private ShopAuditLogMapper shopAuditLogMapper;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
     @Autowired
     private EmployeeMapper employeeMapper;
+
     @Autowired
     private FastDfsServiceImpl fastDfsService;
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public void add(Shop shop) {
@@ -88,6 +101,7 @@ public class ShopServiceImpl implements IShopService {
         if (!BaiduAuditUtils.TextCensor(shop.getName())) {
             throw new BusinessException("店铺名称不合法!!!");
         }
+        System.out.println(shop.getLogo());
         byte[] imgBys = fastDfsService.downloadFile(shop.getLogo());
         if (!BaiduAuditUtils.ImgCensor(imgBys)) {
             throw new BusinessException("店铺LOGO不合法!!!");
@@ -145,4 +159,80 @@ public class ShopServiceImpl implements IShopService {
         System.out.println(shopManager);
 
     }
+
+
+
+    //获取邮件发件人
+    @Value("${spring.mail.username}")
+    private String mimeMessageFrom;
+
+    /**
+     * 审核通过
+     * @param shopAuditLog
+     */
+    @Override
+    public void pass(ShopAuditLog shopAuditLog) {
+        //1.修改店铺状态
+        shopMapper.updateById(new Shop().setState(2).setId(shopAuditLog.getShopId()));
+        //2.保存审核日志
+        shopAuditLog.setState(2).setAuditTime(LocalDateTime.now());
+        shopAuditLogMapper.insert(shopAuditLog);
+        //3.发送激活邮件
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            helper.setFrom(mimeMessageFrom);
+            helper.setSubject("【宠物之家】店铺激活邮件");
+            //true - 能够再内容中编写html标签 - 会解析
+            helper.setText("<h3>你的店铺已经审核通过，请<a href='http://127.0.0.1:8080/shop/active/" + shopAuditLog.getShopId()
+                    + "'>点击这里</a>激活邮件</h3>", true);
+            //获取店铺的店长信息
+            QueryWrapper<Employee> qw = new QueryWrapper<>();
+            qw.eq("shop_id",shopAuditLog.getShopId());
+            Employee admin = employeeMapper.selectOne(qw);
+            System.out.println(admin);
+            helper.setTo(admin.getEmail());
+            //发送
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BusinessException("邮件发送失败!");
+        }
+    }
+
+    /**
+     * 驳回店铺申请,并发送邮件
+     * @param shopAuditLog 审核日志
+     */
+    @Override
+    public void reject(ShopAuditLog shopAuditLog) {
+        //1.改状态 保存审核日志 发邮件
+        shopMapper.updateById(new Shop().setState(4).setId(shopAuditLog.getShopId()));
+
+        //2.保存审核日志
+        shopAuditLog.setState(4).setAuditTime(LocalDateTime.now());
+        shopAuditLogMapper.insert(shopAuditLog);
+
+        //3.发邮件
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            helper.setFrom(mimeMessageFrom);
+            helper.setSubject("【宠物之家】店铺激活失败通知");
+            //true - 能够再内容中编写html标签 - 会解析
+            helper.setText("<h3>你的店铺审核未通过，请<a href='http://127.0.0.1:8081/#/registerEdit/" + shopAuditLog.getShopId()
+                    + "'>点击这里</a>修改入驻信息重新提交</h3>", true);
+            //获取店铺的店长信息
+            QueryWrapper<Employee> qw = new QueryWrapper<>();
+            qw.eq("shop_id", shopAuditLog.getShopId());
+            System.out.println(shopAuditLog.getShopId());
+            Employee admin = employeeMapper.selectOne(qw);
+            System.out.println(admin);
+            helper.setTo(admin.getEmail());
+            //发送
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BusinessException("驳回邮件发送失败!");
+        }
+    }
+
 }

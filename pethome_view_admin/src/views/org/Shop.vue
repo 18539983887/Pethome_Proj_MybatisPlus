@@ -12,6 +12,18 @@
         <el-form-item>
           <el-button type="primary" disabled @click="handleAdd">新增</el-button>
         </el-form-item>
+        <el-form-item>
+          <!-- 默认name="file" -->
+          <el-upload class="upload-demo"
+                     :on-success="handleSuccess"
+                     action="http://localhost:8080/shop/importExcel"
+                     list-type="text">
+            <el-button type="warning">导入</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="success" @click="exportData">导出</el-button>
+        </el-form-item>
       </el-form>
     </el-col>
 
@@ -190,12 +202,31 @@ export default {
       shopAuditVisible: false,
       //编辑界面数据
       shopAuditLog: {
-        shop_id: null,
+        shopId: null,
         note:''
       }
     }
   },
+
   methods: {
+    handleSuccess(response, file, fileList) {
+      if (response.success) {
+        this.$message({
+          message: '导入成功!',
+          type: 'success'
+        });
+        this.shop.log = null;
+      } else {
+        this.$message({
+          message: '导入失败!',
+          type: 'error'
+        });
+      }
+    },
+    exportData(){
+      //this.$router.push({ path: '/register' });
+      location.href="http://localhost:8080/shop/export";
+    },
     //获取店铺列表
     getShops(){
       let paras = {
@@ -318,7 +349,7 @@ export default {
 
     //点击店铺审核弹出模态框
     handleAudit: function (index, row) {
-      this.shopAuditLog.shop_id = row.id;
+      this.shopAuditLog.shopId = row.id;
       this.shopAuditVisible = true;
     },
 

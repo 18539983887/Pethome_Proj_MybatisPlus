@@ -1,21 +1,20 @@
 package com.qpf.org.service;
 
-import com.qpf.org.pojo.Shop;
-import com.qpf.org.dto.ShopDto;
+import com.qpf.org.pojo.ShopAuditLog;
+import com.qpf.org.dto.ShopAuditLogDto;
 import java.util.List;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.qpf.org.pojo.ShopAuditLog;
 
 
 /**
 * 后端Service接口；
 */
-public interface IShopService {
+public interface IShopAuditLogService {
     /**
      * 添加一个对象
-     * @param shop
+     * @param shopAuditLog
      */
-    void add(Shop shop);
+    void add(ShopAuditLog shopAuditLog);
 
     /**
      * 删除一个对象
@@ -31,33 +30,28 @@ public interface IShopService {
 
     /**
      * 更新一个对象
-     * @param shop
+     * @param shopAuditLog
      */
-    void updateById(Shop shop);
+    void updateById(ShopAuditLog shopAuditLog);
 
     /**
      * 获取一个对象
      * @param id
      * @return
      */
-    Shop findOne(Long id);
+    ShopAuditLog findOne(Long id);
 
     /**
      * 获取所有对象
      * @return
      */
-    List<Shop> findAll();
+    List<ShopAuditLog> findAll();
 
     /**
      * 分页查询
-     * @param  shopDto 分页参数
+     * @param  shopAuditLogDto 分页参数
      * @return
      */
-    IPage<Shop> findByPage(ShopDto shopDto);
+    IPage<ShopAuditLog> findByPage(ShopAuditLogDto shopAuditLogDto);
 
-    void settlement(Shop shop);
-
-    void reject(ShopAuditLog log);
-
-    void pass(ShopAuditLog log);
 }
