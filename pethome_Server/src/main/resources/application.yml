@@ -71,7 +71,7 @@ fdfs:
 
 #MybatisPlus配置
 mybatis-plus:
-  type-aliases-package: com.qpf.org.pojo,com.qpf.org.dto  # 别名包
+  type-aliases-package: com.qpf.*.pojo,com.qpf.*.dto,com.qpf.*.vo  # 别名包
     #mapper-locations: classpath*:/mapper/**/*.xml # 映射文件所在位置
     #configuration:
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # mybatisplus的日志配置

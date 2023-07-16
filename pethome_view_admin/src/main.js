@@ -24,7 +24,29 @@ Vue.prototype.$http.imgPrefix="http://192.168.136.133:8888/"
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
+//1.axios前置拦截器：每次通过axios发送请求之前，让所有的请求都携带uToken
+axios.interceptors.request.use(res => {
+  //携带token
+  let uToken = localStorage.getItem("token");
+  if (uToken) {
+    res.headers['token'] = uToken;
+  }
+  return res;
+}, error => {
+  Promise.reject(error);
+})
+//2.axios后置拦截器：后端处理完axios请求之后，处理响应的数据
+axios.interceptors.response.use(result=>{
+  //后端响应的是没有登录的信息
+  if(!result.data.success && result.data.message==="noLogin"){
+    localStorage.removeItem("token");
+    localStorage.removeItem("logininfo");
+    router.push({path: '/login'});
+  }
+  return result;
+},error => {
+  Promise.reject(error);
+})
 //NProgress.configure({ showSpinner: false });
 
 const router = new VueRouter({
@@ -48,7 +70,21 @@ const router = new VueRouter({
 //router.afterEach(transition => {
 //NProgress.done();
 //});
-
+//3.路由前置拦截器 - 拦截非axios请求
+router.beforeEach((to, from, next) => {
+  //如果访问登录页面   或  注册页面
+  if (to.path == '/login' || to.path == "/register") {
+    next();//放行
+  }else{//其他页面都需要判断你是否登录过
+    //获取localStorage的登录信息
+    let logininfo = localStorage.getItem('logininfo');
+    if (logininfo) {
+      next(); //登录过放行
+    } else {
+      next({path: '/login'});//跳转到login - 登录页面
+    }
+  }
+})
 new Vue({
   //el: '#app',
   //template: '<App/>',

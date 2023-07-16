@@ -31,8 +31,9 @@ public class Employee {
     //员工所属部门ID
     private Long departmentId;
     //店铺ID：为空=平台系统管理员，不为空=店铺管理员
-    @TableField(exist = false)
     private Long shopId;
     @TableField(exist = false)
     private Department dept;
+    //登录信息id
+    private Long loginInfoId;
 }

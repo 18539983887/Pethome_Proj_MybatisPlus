@@ -123,11 +123,11 @@
 			}
 		},
 		mounted() {
-			var user = sessionStorage.getItem('user');
-			if (user) {
-				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
+			var logininfo = localStorage.getItem('logininfo');
+			if (logininfo) {
+        let logininfoObj = JSON.parse(logininfo);
+        this.sysUserName = logininfoObj.username;
+        // this.sysUserAvatar = loginInfoObj.avatar || '';//显示管理员头像，表中没有设计
 			}
 
 		}

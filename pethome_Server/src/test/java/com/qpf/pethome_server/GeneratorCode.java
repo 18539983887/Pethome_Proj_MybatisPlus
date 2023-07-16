@@ -43,7 +43,7 @@
 //        strategy.setTablePrefix(new String[] { "t_" });// 此处可以修改为您的表前缀
 //        strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
 //        strategy.setEntityLombokModel(true);// 是否使用lombok
-//        strategy.setInclude(new String[]{"t_shop_audit_log"}); // 需要生成的表名
+//        strategy.setInclude(new String[]{"t_user","t_logininfo"}); // 需要生成的表名
 //        // strategy.setSuperEntityClass("com.dcl.basic.domain.BaseDomain");    //实体类的父类
 //        // strategy.setSuperServiceClass("com.dcl.basic.service.IBaseService");//Service接口的父接口
 //        // strategy.setSuperServiceImplClass("cn.itsource.basic.service.impl.BaseServiceImpl");//Service实现类的父接口
