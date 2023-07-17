@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qpf.org.mapper.WxuserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="wxuserResultMap" type="com.qpf.org.pojo.Wxuser">
+                <result column="openid" property="openid"/>
+                <result column="nickname" property="nickname"/>
+                <result column="sex" property="sex"/>
+                <result column="address" property="address"/>
+                <result column="headimgurl" property="headimgurl"/>
+                <result column="unionid" property="unionid"/>
+                <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <select id="findByPage" resultMap="wxuserResultMap">
+        select * from t_wxuser
+        <if test="ew != null and ew != ''">
+            ${ew.customSqlSegment}
+        </if>
+        <!--&lt;!&ndash; 如果配置了MybatisPlus的分页插件,则该操作不需要&ndash;&gt;-->
+        <!--<if test="page != null">-->
+        <!--    limit ${(page.current - 1) * page.size}, #{page.size}-->
+        <!--</if>-->
+    </select>
+
+
+</mapper>

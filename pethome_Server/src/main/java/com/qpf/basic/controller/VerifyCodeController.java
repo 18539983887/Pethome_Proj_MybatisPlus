@@ -18,6 +18,7 @@ public class VerifyCodeController {
     @Autowired
     private IVerifyCodeService iVerifyCodeService;
 
+
     @GetMapping("/image/{key}")
     public AjaxResult imageVerifyCode(@PathVariable("key") String key){
         String base64Str = iVerifyCodeService.imageVerifyCode(key);
@@ -31,6 +32,17 @@ public class VerifyCodeController {
     @PostMapping("/smsCode")
     public AjaxResult phoneVerifyCode(@RequestBody SmsCodeDto smsCodeDto){
         iVerifyCodeService.phoneVerifyCode(smsCodeDto);
+        return AjaxResult.me();
+    }
+
+    /**
+     * binderSmsCode
+     * @param smsCodeDto
+     * @return
+     */
+    @PostMapping("/binderSmsCode")
+    public AjaxResult binderVerifyCode(@RequestBody SmsCodeDto smsCodeDto) {
+        iVerifyCodeService.binderVerifyCode(smsCodeDto);
         return AjaxResult.me();
     }
 }

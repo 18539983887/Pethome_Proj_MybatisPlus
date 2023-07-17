@@ -1,9 +1,11 @@
 package ${cfg.parent}.dto;
 
-import ${cfg.basic}.dto.BasePageDto;
+import
+import lombok.experimental.Accessors; ${cfg.basic}.dto.BasePageDto;
 
 /**
  * 查询类：
  */
+@Accessors(chain = true)
 public class ${table.entityName}Dto extends BasePageDto{
 }

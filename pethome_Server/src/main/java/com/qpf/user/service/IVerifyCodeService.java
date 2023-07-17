@@ -6,4 +6,5 @@ public interface IVerifyCodeService {
     String imageVerifyCode(String key);
 
     void phoneVerifyCode(SmsCodeDto smsCodeDto);
+    void binderVerifyCode(SmsCodeDto smsCodeDto);
 }

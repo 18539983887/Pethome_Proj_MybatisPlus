@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qpf.system.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="employeeResultMap" type="com.qpf.system.pojo.Employee">
+                <result column="username" property="username"/>
+                <result column="phone" property="phone"/>
+                <result column="email" property="email"/>
+                <result column="salt" property="salt"/>
+                <result column="password" property="password"/>
+                <result column="age" property="age"/>
+                <result column="state" property="state"/>
+                <result column="department_id" property="departmentId"/>
+                <result column="login_info_id" property="loginInfoId"/>
+                <result column="shop_id" property="shopId"/>
+    </resultMap>
+
+    <select id="findByPage" resultMap="employeeResultMap">
+        select * from t_employee
+        <if test="ew != null and ew != ''">
+            ${ew.customSqlSegment}
+        </if>
+        <!--&lt;!&ndash; 如果配置了MybatisPlus的分页插件,则该操作不需要&ndash;&gt;-->
+        <!--<if test="page != null">-->
+        <!--    limit ${(page.current - 1) * page.size}, #{page.size}-->
+        <!--</if>-->
+    </select>
+
+
+</mapper>

@@ -96,4 +96,45 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
         //SmsUtils.sendSms(phone,"你的手机验证码是：" + code +",请在3分钟内使用!!!");
         System.out.println("你的手机验证码是：" + code + ",请在5分钟内使用!!!");
     }
+
+    @Override
+    public void binderVerifyCode(SmsCodeDto smsCodeDto) {
+        String phone = smsCodeDto.getPhone();
+        //一：校验：空值校验 - 前端和后端都可以校验手机格式问题
+        if (StrUtil.isEmpty(phone)) {
+            throw new BusinessException("信息不能为空!!!");
+        }
+
+        //二：校验：手机号码是否注册过（两个手机号不能绑定一个微信）
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("phone", smsCodeDto.getPhone());
+        User user = userMapper.selectOne(qw);
+        if (user != null) {//根据手机号码查到了 = 手机已经注册
+            throw new BusinessException("该号码已经注册过，请直接登陆!!!");
+        }
+
+        //四：直接从redis获取手机验证码：key【业务🗡:手机号】
+        Object phoneCode = redisTemplate.opsForValue().get("binder:" + phone);
+        //1.没有获取到 = 第一次发送或者过期了，调用StrUtils工具类重新生成
+        String code = null;//用于保存手机验证码
+        if (phoneCode == null) {
+            code = RandomUtil.randomNumbers(4);//4位纯数字的验证码
+        } else {
+            //2.获取到了 = 没有过期，判断重发时间【时间戳】
+            Long oldTime = Long.parseLong(phoneCode.toString().split(":")[1]); //之前的验证码设置的时间戳
+            if ((System.currentTimeMillis() - oldTime) < 1 * 60 * 1000) { //1分钟重发时间
+                //a.如果没有过重发时间 - 没有重发时间，居然发请求过了 = 违规操作 - 抛异
+                throw new BusinessException("操作频繁，稍后重试!!!");
+            } else {
+                //b.如果过了重发时间 - 可以获取新的验证码【用没有过期的 - code:时间戳】
+                code = phoneCode.toString().split(":")[0];
+            }
+        }
+
+        //五：讲key和验证码保存在redis，重新设置过期时间3分钟【如果是用以前的-这句话就刷新了过期时间】
+        redisTemplate.opsForValue().set("binder:" + phone,code+":"+System.currentTimeMillis(),3,TimeUnit.MINUTES);
+        //六：调用短信的工具类发送短信
+        //SmsUtils.sendSms(phone,"你的手机验证码是：" + code +",请在3分钟内使用!!!");
+        System.out.println("你的手机验证码是：" + code +",请在3分钟内使用!!!");
+    }
 }
