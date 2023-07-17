@@ -1,7 +1,7 @@
 package com.qpf.system.dto;
 
-import
-import lombok.experimental.Accessors; com.qpf.basic.dto.BasePageDto;
+import com.qpf.basic.dto.BasePageDto;
+import lombok.experimental.Accessors;
 
 /**
  * 查询类：

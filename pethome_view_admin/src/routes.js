@@ -14,6 +14,9 @@ import Employee from "./views/org/Employee.vue";
 import Shop from "./views/org/Shop.vue";
 import ShopRegister from './views/ShopRegister.vue'
 import ShopRegisterEdit from './views/ShopRegisterEdit.vue'
+import Menu from "./views/org/Menu";
+import Permission from "./views/org/Permission";
+import Role from "./views/org/Role";
 
 let routes = [
   {
@@ -67,9 +70,9 @@ let routes = [
     name: '系统管理',
     iconCls: 'fa fa-id-card-o',
     children: [
-      {path: '/role', component: Table, name: '角色管理'},
-      {path: '/permission', component: Table, name: '权限管理'},
-      {path: '/menu', component: Table, name: '菜单管理'},
+      {path: '/role', component: Role, name: '角色管理'},
+      {path: '/permission', component: Permission, name: '权限管理'},
+      {path: '/menu', component: Menu, name: '菜单管理'},
       {path: '/log', component: Table, name: '日志管理'},
       {path: '/dictionary', component: Table, name: '数据字典'}
     ]

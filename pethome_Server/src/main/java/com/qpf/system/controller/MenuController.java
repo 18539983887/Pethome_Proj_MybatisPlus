@@ -87,4 +87,8 @@ public class MenuController {
     public IPage<Menu> findByPage(@RequestBody MenuDto menuDto) {
         return menuService.findByPage(menuDto);
     }
+    @GetMapping("/menuTree")
+    public List<Menu> menuTree(){
+        return menuService.menuTree();
+    }
 }

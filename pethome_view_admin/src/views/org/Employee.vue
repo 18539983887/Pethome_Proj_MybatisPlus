@@ -70,19 +70,19 @@
         <el-form-item label="姓名" prop="username">
           <el-input v-model="editForm.username" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="电话"prop="phone">
+        <el-form-item label="电话" prop="phone">
           <el-input v-model="editForm.phone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱"prop="email">
+        <el-form-item label="邮箱" prop="email">
           <el-input v-model="editForm.email" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密钥"prop="password">
+        <el-form-item label="密钥" prop="password">
           <el-input v-model="editForm.password" auto-complete="off" placeholder="pethome"></el-input>
         </el-form-item>
         <!--<el-form-item label="新密码">-->
         <!--  <el-input v-model="editForm.password" auto-complete="off"  ></el-input>-->
         <!--</el-form-item>-->
-        <el-form-item label="年龄"prop="age">
+        <el-form-item label="年龄" prop="age">
           <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
         </el-form-item>
         <el-form-item label="状态" prop="state">
@@ -92,21 +92,19 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="所属部门">
-          <el-select v-model="editForm.departmentId" placeholder="请选择" >
-              <el-option v-for="item in departments"
-                         :label="item.name"
-                         :value="item.sn">
-                <span style="float: left">{{ item.name }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
-              </el-option>
-          </el-select>
-<!--            <el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
-<!--            </el-option>-->
+          <el-cascader v-model="editForm.departmentId" :options="deptTree"
+                       :props="{
+                checkStrictly: true,
+                label: 'name',
+                value: 'id'
+              }"
+                       clearable>
+          </el-cascader>
         </el-form-item>
         <el-form-item label="所属店铺" prop="shopId">
           <el-select v-model="editForm.shopId" placeholder="请选择">
-            <!--<el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
-            <!--</el-option>-->
+            <el-option v-for="item in shopList" :label="item.name" :value="item.id">
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -132,7 +130,7 @@
           <el-input v-model="addForm.salt" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="addForm.password" auto-complete="off" ></el-input>
+          <el-input v-model="addForm.password" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="年龄">
           <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
@@ -143,20 +141,20 @@
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属部门" >
-          <el-select v-model="addForm.departmentId" placeholder="请选择">
-              <el-option v-for="item in departments"
-                         :label="item.name"
-                         :value="item.sn">
-                <span style="float: left">{{ item.name }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
-              </el-option>
-          </el-select>
+        <el-form-item label="所属部门">
+          <el-cascader v-model="addForm.departmentId" :options="deptTree"
+                       :props="{
+                checkStrictly: true,
+                label: 'name',
+                value: 'id'
+              }"
+                       clearable>
+          </el-cascader>
         </el-form-item>
         <el-form-item label="所属店铺" prop="shopId">
-          <el-select v-model="addForm" placeholder="请选择">
-            <!--<el-option v-for="item in types" :label="item.typeName" :value="item.id">-->
-            <!--</el-option>-->
+          <el-select v-model="addForm.shopId" placeholder="请选择">
+            <el-option v-for="item in shopList" :label="item.name" :value="item.id">
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -202,8 +200,10 @@ export default {
         email: 1,
         salt: null,
         age: null,
-        state:1,
-        shopId:null
+        state: 1,
+        departmentId:null,
+        shopId: null
+
       },
 
       departments: [],
@@ -217,8 +217,11 @@ export default {
       },
 
       //新增界面数据
-      addForm: {
-      }
+      addForm: {},
+      //数据回显
+      //显示部门数
+      deptTree: [],
+      shopList: []
 
     }
   },
@@ -401,8 +404,8 @@ export default {
         }
       });
     },
-    getDepartment(){
-      this.$http.get("/department").then(res=>{
+    getDepartment() {
+      this.$http.get("/department").then(res => {
         this.departments = res.data;
       })
     },
@@ -434,9 +437,23 @@ export default {
         }
       });
     },
+    //11.获取所有店铺
+    getShopList() {
+      this.$http.get("/shop").then(res => {
+        this.shopList = res.data;
+      })
+    },
+    //11.获取部门树
+    getDeptTree() {
+      this.$http.get("/department/deptTree").then(res => {
+        this.deptTree = res.data;
+      })
+    }
   },
   mounted() {
     this.getEmployeeLists();
+    this.getDeptTree();
+    this.getShopList();
   }
 }
 

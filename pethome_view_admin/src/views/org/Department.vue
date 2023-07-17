@@ -289,7 +289,6 @@ export default {
         sn: '',
         state: 1,
         managerId: null,
-        parentId: null
       };
       this.getManagers();
       this.getDeptTree();

@@ -53,4 +53,6 @@ public interface IMenuService {
      * @return
      */
     IPage<Menu> findByPage(MenuDto menuDto);
+
+    List<Menu> menuTree();
 }

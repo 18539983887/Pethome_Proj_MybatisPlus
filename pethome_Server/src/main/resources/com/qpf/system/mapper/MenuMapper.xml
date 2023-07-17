@@ -12,6 +12,7 @@
                 <result column="parent_id" property="parentId"/>
                 <result column="intro" property="intro"/>
                 <result column="state" property="state"/>
+        <association property="parent" column="parent_id" select="com.qpf.system.mapper.MenuMapper.selectById"></association>
     </resultMap>
 
     <select id="findByPage" resultMap="menuResultMap">
