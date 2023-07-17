@@ -3,12 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qpf.org.mapper.EmployeeMapper">
-    <resultMap id="employeeMapper" type="com.qpf.org.pojo.Employee">
+    <resultMap id="EmployeeMap" type="com.qpf.org.pojo.Employee">
+        <result property="departmentId" column="department_id"></result>
+        <result property="id" column="id"></result>
         <association property="dept" column="department_id"
                      select="com.qpf.org.mapper.DepartmentMapper.selectById">
         </association>
+        <collection property="roleIds" column="id" select="com.qpf.system.mapper.EmployeeRoleMapper.findRoleIdByEmployeeId"></collection>
     </resultMap>
-    <select id="findByPage" resultMap="employeeMapper">
+    <select id="findByPage" resultMap="EmployeeMap">
         select * from t_employee
         <if test="ew != null and ew != ''">
             ${ew.customSqlSegment}

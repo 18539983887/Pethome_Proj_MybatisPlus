@@ -107,6 +107,17 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属角色" prop="roleIds">
+          <el-select v-model="editForm.roleIds" multiple placeholder="请选择">
+            <el-option
+                v-for="item in roleList"
+                :label="item.name"
+                :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -157,6 +168,17 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属角色" prop="roleIds">
+          <el-select v-model="addForm.roleIds" multiple placeholder="请选择">
+            <el-option
+                v-for="item in roleList"
+                :label="item.name"
+                :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.sn }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -201,7 +223,7 @@ export default {
         salt: null,
         age: null,
         state: 1,
-        departmentId:null,
+        // departmentId:null,
         shopId: null
 
       },
@@ -221,7 +243,8 @@ export default {
       //数据回显
       //显示部门数
       deptTree: [],
-      shopList: []
+      shopList: [],
+      roleList:[]
 
     }
   },
@@ -443,6 +466,12 @@ export default {
         this.shopList = res.data;
       })
     },
+    //11.获取所有角色
+    getRoleList() {
+      this.$http.get("/role").then(res => {
+        this.roleList = res.data;
+      })
+    },
     //11.获取部门树
     getDeptTree() {
       this.$http.get("/department/deptTree").then(res => {
@@ -454,6 +483,7 @@ export default {
     this.getEmployeeLists();
     this.getDeptTree();
     this.getShopList();
+    this.getRoleList();
   }
 }
 

@@ -24,4 +24,10 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     List<Role> findByPage(@Param("page") IPage<Role> page,@Param("ew") QueryWrapper<Role> queryWrapper);
+    /**
+     * 根据员工Id，查询员工所属角色ID
+     * @param employeeId 员工id
+     * @return
+     */
+
 }

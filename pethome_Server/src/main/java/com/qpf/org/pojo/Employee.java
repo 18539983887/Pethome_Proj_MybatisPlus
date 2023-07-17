@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 实体类：员工
  */
@@ -32,8 +34,12 @@ public class Employee {
     private Long departmentId;
     //店铺ID：为空=平台系统管理员，不为空=店铺管理员
     private Long shopId;
+    //所属部门
     @TableField(exist = false)
     private Department dept;
     //登录信息id
     private Long loginInfoId;
+    //所属角色们(员工可以有多个角色)
+    @TableField(exist = false)
+    private List<Long> roleIds;
 }
