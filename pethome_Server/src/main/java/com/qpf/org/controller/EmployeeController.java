@@ -82,8 +82,10 @@ public class EmployeeController {
     @PutMapping
     public AjaxResult addOrUpdate(@RequestBody @Validated Employee employee){
         if(employee.getId()==null){//添加
+            System.out.println(employee);
             employeeService.add(employee);
         }else{
+            System.out.println(employee);
             employeeService.update(employee);
         }
         return new AjaxResult();

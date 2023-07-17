@@ -38,6 +38,7 @@
 
       </el-table-column>
       <el-table-column prop="departmentId" label="员工类型" width="150" sortable>
+
         <template scope="scope">
           <span v-if="scope.row.departmentId == null" style="color: green">平台系统管理员</span>
           <span v-if="scope.row.departmentId != null" style="color: gray">店铺管理员</span>
@@ -223,7 +224,7 @@ export default {
         salt: null,
         age: null,
         state: 1,
-        // departmentId:null,
+        departmentId:null,
         shopId: null
 
       },
@@ -407,6 +408,15 @@ export default {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true;
 
+            let temp = this.editForm.departmentId;
+            if(temp==null || temp.length==0){
+              //如果没有选择，那就是顶级部门
+              this.editForm.departmentId = null;
+            }else if(temp.length){
+              //如果选中多级，则只有最后一个才是真正的上级部门。
+              this.editForm.departmentId = temp[temp.length-1];
+            }
+
             let para = Object.assign({}, this.editForm);
             para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             this.$http.put("/employee", para).then(res => {
@@ -439,6 +449,14 @@ export default {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.addLoading = true;
+            let temp = this.addForm.departmentId;
+            if(temp==null || temp.length==0){
+              //如果没有选择，那就是顶级部门
+              this.addForm.departmentId = null;
+            }else if(temp.length){
+              //如果选中多级，则只有最后一个才是真正的上级部门。
+              this.addForm.departmentId = temp[temp.length-1];
+            }
             let para = Object.assign({}, this.addForm);
             para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             this.$http.put("/employee", para).then(res => {
