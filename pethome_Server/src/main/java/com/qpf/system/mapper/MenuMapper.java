@@ -24,4 +24,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return
      */
     List<Menu> findByPage(@Param("page") IPage<Menu> page,@Param("ew") QueryWrapper<Menu> queryWrapper);
+
+    List<Menu> getMenusByLogininfoId(Long id);
 }

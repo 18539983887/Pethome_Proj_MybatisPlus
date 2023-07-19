@@ -106,7 +106,11 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
-					sessionStorage.removeItem('user');
+					// sessionStorage.removeItem('user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('logininfo');
+          localStorage.removeItem('permissions');
+          localStorage.removeItem('menus');
 					_this.$router.push('/login');
 				}).catch(() => {
 

@@ -21,6 +21,7 @@ public class LoginController {
     @PostMapping("/account")
     public AjaxResult accountLogin(@RequestBody LoginDto loginDto){
         Map<String,Object> map = loginInfoService.accountLogin(loginDto);
+        System.out.println(map);
         return AjaxResult.me().setResultObj(map);
     }
     @GetMapping("/wechat/{code}")

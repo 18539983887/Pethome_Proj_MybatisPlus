@@ -24,4 +24,6 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @return
      */
     List<Permission> findByPage(@Param("page") IPage<Permission> page,@Param("ew") QueryWrapper<Permission> queryWrapper);
+
+    List<String> getPermissionsByLogininfoId(Long id);
 }

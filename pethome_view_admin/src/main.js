@@ -13,7 +13,7 @@ import routes from './routes'
 // import Mock from './mock'
 // Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
-
+import '@/common/js/permission'
 //引入axios
 import axios from 'axios'
 //配置axios的全局基本路径，访问后端接口使用8080
@@ -36,19 +36,33 @@ axios.interceptors.request.use(res => {
   Promise.reject(error);
 })
 //2.axios后置拦截器：后端处理完axios请求之后，处理响应的数据
-axios.interceptors.response.use(result=>{
+//后台系统对登录拦截响应数据调整：main.js
+//===============================axios的后置拦截器========================//
+//发送axios请求之后都会执行以下代码
+axios.interceptors.response.use(res => {
   //后端响应的是没有登录的信息
-  if(!result.data.success && result.data.message==="noLogin"){
+  if (false === res.data.success && "noLogin" === res.data.msg) {
+    //删除localStorage的信息
     localStorage.removeItem("token");
     localStorage.removeItem("logininfo");
+    localStorage.removeItem("permissions");
+    localStorage.removeItem("menus");
+    //跳转到登录页面
+    router.push({path: '/login'});
+  }else if(false === res.data.success && "timeout" === res.data.msg){
+    alert("登录超时，请重新登录");
+    //删除localStorage的信息
+    localStorage.removeItem("token");
+    localStorage.removeItem("logininfo");
+    localStorage.removeItem("permissions");
+    localStorage.removeItem("menus");
+    //跳转到登录页面
     router.push({path: '/login'});
   }
-  return result;
+  return res;
 },error => {
-  Promise.reject(error);
+  Promise.reject(error)
 })
-//NProgress.configure({ showSpinner: false });
-
 const router = new VueRouter({
   routes
 })
@@ -93,4 +107,39 @@ new Vue({
   //components: { App }
   render: h => h(App)
 }).$mount('#app')
-
+//--------------------------------------------------------------------
+//处理页面刷新动态路由失效问题
+initIndexRouters();
+function initIndexRouters(){
+  if(!localStorage.menus){
+    return;
+  }
+  //防止重复配置路由：5就是main.js中路由的个数 - 如果你的静态路由是6个这里要写成6
+  if(router.options.routes.length>6){
+    return;
+  }
+  let menus = localStorage.getItem('menus');
+  menus = JSON.parse(menus);
+  let tempRouters = [];
+  menus.forEach(menu=>{
+    let indexRouter = {
+      path: '/',
+      iconCls: menu.icon,
+      name: menu.name,
+      component: resolve => require(['@/views/Home'], resolve),
+      children: []
+    }
+    menu.children.forEach(cMenu=>{
+      let cr = {
+        path: cMenu.url,
+        name: cMenu.name,
+        component: resolve => require(['@/views/'+cMenu.component], resolve)
+      }
+      indexRouter.children.push(cr)
+    })
+    tempRouters.push(indexRouter)
+    router.options.routes.push(indexRouter)
+  })
+  //动态路由配置
+  router.addRoutes(tempRouters);
+}

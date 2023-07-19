@@ -53,30 +53,30 @@ let routes = [
       {path: '/echarts', component: echarts, name: 'echarts'}
     ]
   },
-  {
-    path: '/',
-    component: Home,
-    name: '组织机构管理',
-    iconCls: 'el-icon-monitor',//图标样式class
-    children: [
-      {path: '/department', component: Department, name: '部门管理'},
-      {path: '/employee', component: Employee, name: '员工管理'},
-      {path: '/shop', component: Shop, name: '店铺管理'},
-    ]
-  },
-  {
-    path: '/',
-    component: Home,
-    name: '系统管理',
-    iconCls: 'fa fa-id-card-o',
-    children: [
-      {path: '/role', component: Role, name: '角色管理'},
-      {path: '/permission', component: Permission, name: '权限管理'},
-      {path: '/menu', component: Menu, name: '菜单管理'},
-      {path: '/log', component: Table, name: '日志管理'},
-      {path: '/dictionary', component: Table, name: '数据字典'}
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: Home,
+  //   name: '组织机构管理',
+  //   iconCls: 'el-icon-monitor',//图标样式class
+  //   children: [
+  //     {path: '/department', component: Department, name: '部门管理'},
+  //     {path: '/employee', component: Employee, name: '员工管理'},
+  //     {path: '/shop', component: Shop, name: '店铺管理'},
+  //   ]
+  // },
+  // {
+  //   path: '/',
+  //   component: Home,
+  //   name: '系统管理',
+  //   iconCls: 'fa fa-id-card-o',
+  //   children: [
+  //     {path: '/role', component: Role, name: '角色管理'},
+  //     {path: '/permission', component: Permission, name: '权限管理'},
+  //     {path: '/menu', component: Menu, name: '菜单管理'},
+  //     {path: '/log', component: Table, name: '日志管理'},
+  //     {path: '/dictionary', component: Table, name: '数据字典'}
+  //   ]
+  // },
   {
     path: '*',
     hidden: true,

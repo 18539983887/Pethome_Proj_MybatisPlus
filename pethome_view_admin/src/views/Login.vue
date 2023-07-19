@@ -28,7 +28,7 @@ export default {
       logining: false,
       loginForm: {
         username: 'admin',
-        password: '123456',
+        password: '1',
         type:0
       },
       rules2: {
@@ -49,26 +49,40 @@ export default {
       this.$router.push({path: '/shopRegister'});
     },
     handleSubmit(ev) {
-      // var _this = this;
+      //表单校验：所有表单项校验成功才返回为true - 才能发送请求
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          //_this.$router.replace('/table');
-          this.logining = true;//显示加载框或忙等框
-          //NProgress.start();
-          // var loginParams = {username: this.loginForm.account, password: this.loginForm.checkPass};
-          this.$http.post("login/account",this.loginForm).then(res => {
-            if(res.data.success){//登录成功
-              //将登录信息和token保存的redis
-              localStorage.setItem("token",res.data.resultObj.token);
-              localStorage.setItem("logininfo",JSON.stringify(res.data.resultObj.logininfo));
-              //跳转到后台首页
+          this.logining = true; //显示加载框或忙等框
+          this.$http.post("/login/account", this.loginForm).then(res => {
+            if (res.data.success) {//登录成功
+              //1.显示成功信息
+              this.$message({
+                message: "登录成功",
+                type: 'success'
+              });
+              //2.将token和logininfo保存到localStrorage中
+              //解构表达式：快捷获取
+              let {token, logininfo, menus, permissions} = res.data.resultObj;
+              localStorage.setItem("token", token);
+              //注意：保存的是json格式的字符串，那么获取的时候需要进行转换才能使用json对象
+              localStorage.setItem("logininfo", JSON.stringify(logininfo));
+              localStorage.setItem("menus", JSON.stringify(menus));
+              localStorage.setItem("permissions", JSON.stringify(permissions));
+              //3.跳转到首页
+              location.reload();
               this.$router.push({path: '/echarts'});
             } else {//登录失败
-              this.$message.error(res.data.message);
+              this.$message({
+                message: res.data.message,
+                type: 'error'
+              });
             }
             this.logining = false; //关闭加载框或忙等框
-          }).catch(res =>{
-            this.$message.error("系统繁忙，请稍后重试!!!【400,404】")
+          }).catch(res => {
+            this.$message({
+              message: "系统错误",
+              type: 'error'
+            });
             this.logining = false; //关闭加载框或忙等框
           })
         } else {

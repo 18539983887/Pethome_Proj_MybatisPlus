@@ -19,12 +19,25 @@ axios.interceptors.request.use(res => {
 //======================axios的前置拦截器【拦截调用后端的请求】====================//
 //======================axios的后置拦截器【处理后台登录拦截的结果】====================//
 axios.interceptors.response.use(res => {
+    // //后端响应的是没有登录的信息
+    // if (false === res.data.success && "noLogin" === res.data.message) {
+    //     localStorage.removeItem("token");
+    //     localStorage.removeItem("logininfo");
+    //     //跳转到登录页面
     //后端响应的是没有登录的信息
-    if (false === res.data.success && "noLogin" === res.data.message) {
+    if (false === res.data.success && "noLogin" === res.data.msg) {
+        //删除localStorage的token和logininfo
         localStorage.removeItem("token");
         localStorage.removeItem("logininfo");
         //跳转到登录页面
-        router.push({path: '/login'});
+        location.href="login";
+    }else if (false === res.data.success && "timeout" === res.data.msg) {
+        alert("登录超时，请重新登录");
+        //删除localStorage的token和logininfo
+        localStorage.removeItem("token");
+        localStorage.removeItem("logininfo");
+        //跳转到登录页面
+        location.href="login";
     }
     return res;
 }, error => {

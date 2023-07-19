@@ -12,8 +12,14 @@ import com.qpf.basic.dto.LoginDto;
 import com.qpf.basic.exception.BusinessException;
 import com.qpf.basic.utils.HttpUtil;
 import com.qpf.basic.vo.AjaxResult;
+import com.qpf.jwt.JwtTokenUtils;
+import com.qpf.jwt.LoginData;
+import com.qpf.jwt.RsaUtils;
 import com.qpf.org.mapper.WxuserMapper;
 import com.qpf.org.pojo.Wxuser;
+import com.qpf.system.mapper.MenuMapper;
+import com.qpf.system.mapper.PermissionMapper;
+import com.qpf.system.pojo.Menu;
 import com.qpf.user.mapper.UserMapper;
 import com.qpf.user.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +31,7 @@ import com.qpf.user.service.ILogininfoService;
 import com.qpf.user.mapper.LoginInfoMapper;
 import com.qpf.user.dto.LoginInfoDto;
 
+import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +51,10 @@ public class LoginInfoServiceImpl implements ILogininfoService {
     private UserMapper userMapper;
     @Autowired
     private WxuserMapper wxuserMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     public void add(Logininfo logininfo) {
@@ -117,16 +128,18 @@ public class LoginInfoServiceImpl implements ILogininfoService {
         if (!logininfo.getDisable()) {
             throw new BusinessException("该账号被禁用，请联系管理员!!!");
         }
-        //五：生成token，并将登录信息保存到redis数据库，设置30有效
-        String token = IdUtil.fastSimpleUUID();//36位随机字符串
-        redisTemplate.opsForValue().set(token, logininfo, 30, TimeUnit.MINUTES);
-
-        //封住返回值：Map【token，logininfo】
-        Map<String, Object> map = new HashMap<>();
-        map.put("token", token);
-        logininfo.setSalt(null);
-        logininfo.setPassword(null);
-        map.put("logininfo", logininfo);
+        Map<String, Object> map = loginSuccessJwtHandler(logininfo);
+        System.out.println(map);
+//        //五：生成token，并将登录信息保存到redis数据库，设置30有效
+//        String token = IdUtil.fastSimpleUUID();//36位随机字符串
+//        redisTemplate.opsForValue().set(token, logininfo, 30, TimeUnit.MINUTES);
+//
+//        //封住返回值：Map【token，logininfo】
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("token", token);
+//        logininfo.setSalt(null);
+//        logininfo.setPassword(null);
+//        map.put("logininfo", logininfo);
 
         return map;
     }
@@ -168,21 +181,63 @@ public class LoginInfoServiceImpl implements ILogininfoService {
             if (user != null) {
                 //查询登录了信息,并返回给前台,让前台可以进行数据回显
                 Logininfo logininfo = logininfoMapper.selectById(user.getLoginInfoId());
-                String token = IdUtil.fastSimpleUUID(); //36位随机字符串
-                redisTemplate.opsForValue().set(token, logininfo, 30, TimeUnit.MINUTES);
+//微信登录和微信绑定中的免密登录/resis都要换成以下代码：
+//登录成功调用方法生成Jwt token响应给前端
+                Map<String, Object> map = loginSuccessJwtHandler(logininfo);
                 //封住返回值：Map【token，logininfo】
-                Map<String, Object> map = new HashMap<>();
-                map.put("token", token);
-                logininfo.setSalt(null);
-                logininfo.setPassword(null);
-                map.put("logininfo", logininfo);
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("token", token);
+//                logininfo.setSalt(null);
+//                logininfo.setPassword(null);
+//                map.put("logininfo", logininfo);
 
                 return AjaxResult.me().setResultObj(map);
-            }else{
+            } else {
                 throw new BusinessException("该用户已经不存在,请重新注册!!!");
             }
         }
         //4.2 如果没有查到(不论是有没有微信用户,还是有没有普通用户) = 响应给前端token，openid，前端跳转到绑定页面
         return AjaxResult.me().setSuccess(false).setResultObj("accessToken=" + accessToken + "&openid=" + openid);
+    }
+
+    //LogininfoServiceImpl
+    private Map<String, Object> loginSuccessJwtHandler(Logininfo logininfo) {
+        //处理掉密码和盐值 => 安全
+        logininfo.setPassword(null);
+        logininfo.setSalt(null);
+        //jwt token => 私钥 + LoginData【logininfo + permissions + menus】
+        //本来就只需要传递token到前端就可以了，因为token中数据全都有，只需要解密就可以了
+        //前端ks代码没有写解密的代码。所以除了将token传递到前端，还需要传递
+        //1.logininfo-显示用户信息 2.menus-动态路由-动态菜单 3.permissions-资源权限/按钮权限 4.token-后续发请求要判断是否登录了
+        //前台用户没有权限和菜单，前台用户的Map中只有：登录信息logininfo，token
+        Map<String, Object> map = new HashMap<>();
+        LoginData loginData = new LoginData();
+        map.put("logininfo", logininfo);
+        loginData.setLogininfo(logininfo);
+
+        if (logininfo.getType() == 0) { //0-表示管理员
+            //一：想办法获取当前登录人的权限：permissions - 查那些字段
+            List<String> permissions = permissionMapper.getPermissionsByLogininfoId(logininfo.getId());
+            map.put("permissions", permissions);
+            loginData.setPermissions(permissions);
+            //二：想办法获取当前登录人的菜单：menus - 查那些字段
+            List<Menu> menus = menuMapper.getMenusByLogininfoId(logininfo.getId());
+            map.put("menus", menus);
+            loginData.setMenus(menus);
+            //三：将permissions，menus，logininfo封装到LoginData中
+        }
+
+        try {
+            //四：通过工具类获取私钥
+            PrivateKey privateKey = RsaUtils.getPrivateKey(JwtTokenUtils.class.getClassLoader().getResource("auth_rsa.pri").getFile());
+            //五：使用工具类和私钥将LoginData加密 => token[jwt token]
+            String jwtToken = JwtTokenUtils.generateTokenExpire(loginData, privateKey, 30 * 60);
+            //六：将permissions，menus，logininfo，token[jwt token]装到Map中响应给前端
+            map.put("token", jwtToken);
+            System.out.println(jwtToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }
