@@ -1,5 +1,6 @@
 package com.qpf.system.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -77,13 +78,12 @@ public class MenuServiceImpl implements IMenuService {
         Map<Long, Menu> map = new HashMap<>();
         for (Menu menu : allMenus) {
             map.put(menu.getId(), menu);
-            System.out.println(map);
         }
         //3.创建最终的菜单树集合
         List<Menu> menuTree = new ArrayList<>();
         //4.遍历Map集合
         for (Menu menu : allMenus) {
-            //4.1如果是顶级部门 - 就添加到部门树
+            //4.1如果是顶级部门 - 就添加到部门数
             if (menu.getParentId() == null) {
                 menuTree.add(menu);
             } else {
@@ -95,8 +95,43 @@ public class MenuServiceImpl implements IMenuService {
                 //将自己添加到父部门的集合列表中
                 m.getChildren().add(menu);
             }
-
         }
+        //5.返回菜单树
         return menuTree;
+    }
+
+    /**
+     * 获取所有菜单路径
+     *
+     * @return 菜单路径<菜单ID, 菜单路径>
+     */
+    @Override
+    public Map<Long, String> menuPath() {
+        //1.查询所有菜单
+        List<Menu> menuTree = menuTree();
+        //2.定义存储菜单路径的集合
+        Map<Long, String> menuPath = new HashMap<>();
+        //3.遍历添加
+        for (Menu menu : menuTree) {
+            //3.1 添加顶级部门
+            menuPath.put(menu.getId(), "/" + menu.getId());
+            //3.2 添加当前顶级部门的子部门
+            setFullPath(menuPath,menu.getChildren());
+        }
+        //4.返回
+        return menuPath;
+    }
+
+    private void setFullPath(Map<Long, String> menuPath, List<Menu> childrenMenuTree) {
+        //如果没有子部门，则停止
+        if (ObjectUtil.isEmpty(childrenMenuTree)) {
+            return;
+        }
+        //如果有子部门，则便利子部门
+        for (Menu menu : childrenMenuTree) {
+            String parentPath = menuPath.get(menu.getParentId());
+            menuPath.put(menu.getId(), parentPath + "/" + menu.getId());
+            setFullPath(menuPath, menu.getChildren());
+        }
     }
 }

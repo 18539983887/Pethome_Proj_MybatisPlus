@@ -4,8 +4,8 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="rolePermissionResultMap" type="com.qpf.system.pojo.RolePermission">
-                <result column="permission_id" property="permissionId"/>
-                <result column="id" property="id"/>
+        <result column="permission_id" property="permissionId"/>
+        <result column="id" property="id"/>
     </resultMap>
 
     <select id="findByPage" resultMap="rolePermissionResultMap">
@@ -17,6 +17,11 @@
         <!--<if test="page != null">-->
         <!--    limit ${(page.current - 1) * page.size}, #{page.size}-->
         <!--</if>-->
+    </select>
+    <select id="findPermissionIdByRoleId" resultType="java.lang.Long">
+        select permission_id
+        from t_role_permission
+        where role_id = #{roleId}
     </select>
 
 

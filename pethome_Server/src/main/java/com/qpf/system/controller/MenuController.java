@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * 后端接口类；
@@ -90,5 +91,9 @@ public class MenuController {
     @GetMapping("/menuTree")
     public List<Menu> menuTree(){
         return menuService.menuTree();
+    }
+    @GetMapping("/menuPath")
+    public Map<Long,String> menuPath(){
+        return menuService.menuPath();
     }
 }

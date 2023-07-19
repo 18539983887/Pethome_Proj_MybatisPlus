@@ -53,4 +53,5 @@ public interface IPermissionService {
      * @return
      */
     IPage<Permission> findByPage(PermissionDto permissionDto);
+    void scanPermission();
 }

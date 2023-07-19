@@ -3,6 +3,8 @@ package com.qpf.system.service;
 import com.qpf.system.pojo.Menu;
 import com.qpf.system.dto.MenuDto;
 import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 
@@ -55,4 +57,6 @@ public interface IMenuService {
     IPage<Menu> findByPage(MenuDto menuDto);
 
     List<Menu> menuTree();
+
+    Map<Long, String> menuPath();
 }
