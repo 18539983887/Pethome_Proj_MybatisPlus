@@ -106,41 +106,41 @@ public class LoginInfoServiceImpl implements ILogininfoService {
     public Map<String, Object> accountLogin(LoginDto loginDto) {
         String username = loginDto.getUsername();
         String password = loginDto.getPassword();
-        //一：校验 - 空值校验
+        //1：校验 - 空值校验
         if (StrUtil.isEmpty(username) || StrUtil.isEmpty(password)) {
             throw new BusinessException("信息不能为空!!!");
         }
-        //二：校验 - 账号校验(因为支持用户名和邮箱登录,所以条件要写多条件)
+
+        //2：校验 - 账号校验(因为支持用户名和邮箱登录,所以条件要写多条件)
         QueryWrapper<Logininfo> qw = new QueryWrapper<>();
-        qw.eq("type", loginDto.getType());
         qw.eq("username", username).or().eq("email", username).or().eq("phone", username);
         Logininfo logininfo = logininfoMapper.selectOne(qw);//登录信息
         if (logininfo == null) {
             throw new BusinessException("账号或密码错误!!!");
         }
-        //三：校验 - 密码 - 加密加盐
+/*
+        //3：判断身份是否正确(防止用户身份登录后台管理系统)
+        if (logininfo.getType() != loginDto.getType()){
+            throw new BusinessException("您登陆的平台有误,请前往正确的平台登录!");
+        }*/
+
+        //4：校验 - 密码 - 加密加盐
         //前端输入的密码进行加密加盐
         String inputPwd = SecureUtil.md5(password + logininfo.getSalt());
         if (!inputPwd.equals(logininfo.getPassword())) {
             throw new BusinessException("账号或密码错误!!!");
         }
-        //四：校验 - 是否被禁用
+
+        //5：校验 - 是否被禁用
         if (!logininfo.getDisable()) {
             throw new BusinessException("该账号被禁用，请联系管理员!!!");
         }
-        Map<String, Object> map = loginSuccessJwtHandler(logininfo);
-        System.out.println(map);
-//        //五：生成token，并将登录信息保存到redis数据库，设置30有效
-//        String token = IdUtil.fastSimpleUUID();//36位随机字符串
-//        redisTemplate.opsForValue().set(token, logininfo, 30, TimeUnit.MINUTES);
-//
-//        //封住返回值：Map【token，logininfo】
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("token", token);
-//        logininfo.setSalt(null);
-//        logininfo.setPassword(null);
-//        map.put("logininfo", logininfo);
 
+        //6：生成token，并将登录信息保存到redis数据库，设置30有效
+      /*  String token = IdUtil.fastSimpleUUID();//36位随机字符串
+        redisTemplate.opsForValue().set(token, logininfo, 30, TimeUnit.MINUTES);*/
+
+        Map<String, Object> map = loginSuccessJwtHandler(logininfo);
         return map;
     }
 

@@ -18,12 +18,9 @@ axios.interceptors.request.use(res => {
 })
 //======================axios的前置拦截器【拦截调用后端的请求】====================//
 //======================axios的后置拦截器【处理后台登录拦截的结果】====================//
+//=============axios的后置拦截器==========================//
+//作用：专门处理axios响应回来的数据。先于回调函数执行
 axios.interceptors.response.use(res => {
-    // //后端响应的是没有登录的信息
-    // if (false === res.data.success && "noLogin" === res.data.message) {
-    //     localStorage.removeItem("token");
-    //     localStorage.removeItem("logininfo");
-    //     //跳转到登录页面
     //后端响应的是没有登录的信息
     if (false === res.data.success && "noLogin" === res.data.msg) {
         //删除localStorage的token和logininfo
@@ -40,7 +37,7 @@ axios.interceptors.response.use(res => {
         location.href="login";
     }
     return res;
-}, error => {
+},error => {
     Promise.reject(error)
 })
 //======================axios的后置拦截器【处理后台登录拦截的结果】====================//

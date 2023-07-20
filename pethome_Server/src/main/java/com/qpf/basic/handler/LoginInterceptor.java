@@ -26,20 +26,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        //1.获取token
-//        String token = request.getHeader("token");
-//        //2.判断 - 如果有token
-//        if (token != null) {
-//            //2.1 通过token获取redis的登录信息
-//            Object obj = redisTemplate.opsForValue().get(token); //Logininfo对象
-//            //2.2 如果登录信息不为null, 表示登录成功，而且没有过期
-//            if (obj != null) {
-//                //2.3 放行 + 刷新过期时间[重新添加到redis]
-//                redisTemplate.opsForValue().set(token, obj, 30, TimeUnit.MINUTES);
-//                return true;
-//            }
-//        }
-        //1.获取请求头中的token
 
         //1.获取请求头中的token
         String token = request.getHeader("token");

@@ -21,10 +21,11 @@
         <!--</if>-->
     </select>
     <select id="getPermissionsByLogininfoId" resultType="java.lang.String">
-        select tp.sn from t_employee te
-        join t_employee_role ter on te.id = ter.employee_id
-        join t_role_permission trp on ter.role_id = trp.role_id
-        join t_permission tp on trp.permission_id = tp.id
+        select tp.sn
+        from t_employee te
+                 join t_employee_role ter on te.id = ter.employee_id
+                 join t_role_permission trp on ter.role_id = trp.role_id
+                 join t_permission tp on trp.permission_id = tp.id
         where te.logininfo_id = #{logininfoId}
     </select>
 

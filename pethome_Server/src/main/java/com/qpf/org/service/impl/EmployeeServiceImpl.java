@@ -52,7 +52,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         loginInfoMapper.insert(logininfo);//获取到自增ID
 
         //添加employee的数据
-        employee.setLoginInfoId(logininfo.getId());
+        employee.setLogininfoId(logininfo.getId());
         employeeMapper.insert(employee);
         //4.添加员工所对应的角色
         if (ObjectUtil.isNotEmpty(employee.getRoleIds())) {
@@ -76,7 +76,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         //3.删除employee(关联数据先删除从表)
         employeeMapper.deleteById(id);
         //4.删除logininfo(再删除主表)
-        loginInfoMapper.deleteById(employee.getLoginInfoId());
+        loginInfoMapper.deleteById(employee.getLogininfoId());
     }
 
     @Transactional
@@ -92,7 +92,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         employeeRoleMapper.delete(new UpdateWrapper<EmployeeRole>().in("employee_id",ids));
         //2.查询所有员工信息，并获取他们的登录信息
         List<Employee> list = employeeMapper.selectBatchIds(Arrays.asList(ids));
-        List<Long> loginInfoIds = list.stream().map(emp -> emp.getLoginInfoId()).collect(Collectors.toList());
+        List<Long> loginInfoIds = list.stream().map(emp -> emp.getLogininfoId()).collect(Collectors.toList());
         //3.删除所有员工
         employeeMapper.deleteBatchIds(Arrays.asList(ids));
         //4.删除员工的登录信息
@@ -112,8 +112,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
 
         //2.修改登陆信息
-        Logininfo logininfo = loginInfoMapper.selectById(employee.getLoginInfoId());
-        if (employee.getLoginInfoId() == null || logininfo == null) {
+        Logininfo logininfo = loginInfoMapper.selectById(employee.getLogininfoId());
+        if (employee.getLogininfoId() == null || logininfo == null) {
             logininfo = new Logininfo();
         }
         //2.1 把员工的数据同步到登录信息中,不同步id
@@ -127,7 +127,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
             //2.4 修改登录信息
             loginInfoMapper.insert(logininfo);
             //2.5 把新添加的登录信息关联到员工表中
-            employee.setLoginInfoId(logininfo.getId());
+            employee.setLogininfoId(logininfo.getId());
         }
 
         //3.更新员工信息

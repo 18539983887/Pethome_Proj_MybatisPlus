@@ -167,7 +167,7 @@ export default {
         index: 1,
         intro: '',
         state: true,
-        parent: null,
+        parent: null
       }
     }
   },
@@ -271,18 +271,14 @@ export default {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.saveLoading = true;
+            let paras = Object.assign({}, this.saveForm);
 
-
-            let temp = this.saveForm.parentId;
-            if (temp == null || temp.length == 0) {
-              //如果没有选择，那就是顶级部门
-              this.saveForm.parentId = null;
-            } else if (temp.length) {
-              //如果选中多级，则只有最后一个才是真正的上级部门。
-              this.saveForm.parentId = temp[temp.length - 1];
+            //提交数据时上级部门数据格式做处理：[3,8] - {id:8}
+            var arr = this.saveForm.parent; //[ 3, 8 ]
+            if (arr) {
+              paras.parent = {id: arr[arr.length - 1]}
             }
 
-            let paras = Object.assign({}, this.saveForm);
             this.$http.put("/menu", paras).then(res => {
               this.saveFormVisible = false;
               this.saveLoading = false;
@@ -337,7 +333,6 @@ export default {
   mounted() {
     //分页查询 - 页面一加载查询
     this.getMenus();
-    this.getMenuTree();
   }
 }
 

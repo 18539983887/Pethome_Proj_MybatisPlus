@@ -24,10 +24,4 @@ public interface RolePermissionMapper extends BaseMapper<RolePermission> {
      * @return
      */
     List<RolePermission> findByPage(@Param("page") IPage<RolePermission> page,@Param("ew") QueryWrapper<RolePermission> queryWrapper);
-    /**
-     * 根据角色ID，查询角色所拥有的权限
-     * @param roleId 角色id
-     * @return
-     */
-    List<Long> findPermissionIdByRoleId(Long roleId);
 }

@@ -234,7 +234,6 @@ export default {
         if (valid) {
           this.$confirm('确认保存吗？', '提示', {}).then(() => {
             this.saveLoading = true;
-
             let para = Object.assign({}, this.saveForm);
             //处理分配菜单参数格式 menus:[[22,23],[22,24],[22,25]]---->menus:[23,24,25]
             let menusArr = para.menus;

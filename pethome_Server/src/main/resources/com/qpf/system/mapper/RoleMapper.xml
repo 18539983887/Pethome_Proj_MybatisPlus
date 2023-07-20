@@ -6,10 +6,6 @@
     <resultMap id="roleResultMap" type="com.qpf.system.pojo.Role">
                 <result column="name" property="name"/>
                 <result column="sn" property="sn"/>
-        <collection property="menuIds" column="id"
-                    select="com.qpf.system.mapper.RoleMenuMapper.findMenuIdByRoleId"/>
-        <collection property="permissionIds" column="id"
-                    select="com.qpf.system.mapper.RolePermissionMapper.findPermissionIdByRoleId"/>
     </resultMap>
 
     <select id="findByPage" resultMap="roleResultMap">

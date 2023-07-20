@@ -149,7 +149,7 @@ public class ShopServiceImpl implements IShopService {
         logininfo.setType(0);//管理员
         logininfo.setDisable(true);//可以登陆
         loginInfoMapper.insert(logininfo);
-        admin.setLoginInfoId(logininfo.getId());
+        admin.setLogininfoId(logininfo.getId());
 
         //3.4 添加管理员信息
         admin.setState(1);

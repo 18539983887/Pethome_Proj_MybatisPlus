@@ -27,30 +27,29 @@
         <!--</if>-->
     </select>
     <!--    ************-->
+    <select id="getMenusByLogininfoId" resultMap="MenuMap">
+        select m1.id mid, m1.name mname, m1.icon micon, m2.*
+        from (
+                 select tm.*
+                 from t_employee te
+                          join t_employee_role ter on te.id = ter.employee_id
+                          join t_role_menu trm on ter.role_id = trm.role_id
+                          join t_menu tm on trm.menu_id = tm.id
+                 where logininfo_id = #{logininfoId}
+             ) m2
+                 join t_menu m1
+                      on m2.parent_id = m1.id
+    </select>
     <resultMap id="MenuMap" type="Menu">
-        <id column="m1id" property="id"></id>
-        <result column="m1name" property="name"></result>
-        <result column="m1icon" property="icon"></result>
+        <id column="mid" property="id"></id>
+        <result column="mname" property="name"></result>
+        <result column="micon" property="icon"></result>
         <collection property="children" ofType="Menu">
-            <id column="name" property="id"></id>
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
             <result column="url" property="url"></result>
             <result column="component" property="component"></result>
         </collection>
-        <!--        不映射的部分，也就是没有在<resultMap>中定义的列，将无法直接映射到Java对象中。
-                    这意味着在查询结果中，这些列对应的数据将无法在映射后的Java对象中获取到。-->
     </resultMap>
-    <!--    *******-->
-    <select id="getMenusByLogininfoId" resultType="com.qpf.system.pojo.Menu">
-        select m1.id m1id, m1.name m1name, m1.icon m1icon, m2.*
-        from (select tm.*
-              from t_employee te
-                       join t_employee_role ter on te.id = ter.employee_id
-                       join t_role_menu trm on ter.role_id = trm.role_id
-                       join t_menu tm on trm.menu_id = tm.id
-              where logininfo_id = #{logininfoId}) m2
-                 join t_menu m1 on m2.parent_id = m1.id
-
-    </select>
-
 
 </mapper>

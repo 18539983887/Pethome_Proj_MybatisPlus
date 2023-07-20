@@ -189,20 +189,20 @@ public class JwtTokenUtils {
 //        payload = getInfoFromToken(token, publicKey, User.class);
 //        System.out.println(payload);
 //
-//        // //2.加密Jwt验证
-//        // //2.1 准备加密的密钥
-//        // String publicKeyStr = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsnen01CdQc2zh/HihCNNYI6u7AFXf/NrZ/9auPvFsJcK1cWj5EFBU3lrts2OTvrmYVurhABg2g/Ya7glzUt6DwUojHOWtpwFxSH1v7FUJMvxDsbd4GXKRdWqMkqkcCMQYDpGpshbL3IAWYIw6pgnBcKksbzkDrZCZMAyHa1bB3zh5uEm9mcrRlBUGirbPNVt++3ztIfdc4Vp5hbw++daNMFr/VGDohMVg3Dlk4ZktDgHc5nakXkE8hSr6UDTw45JpfZZ0dP9XTi/CSVQdoYD+dsJIZ8uletlbrErRfZEJNx/k0w88P4kfGteNBGhlzzVo45tMkHT33O8QB6JxI4xVQIDAQAB";
-//        // String privateKeyStr = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyd6fTUJ1BzbOH8eKEI01gjq7sAVd/82tn/1q4+8WwlwrVxaPkQUFTeWu2zY5O+uZhW6uEAGDaD9hruCXNS3oPBSiMc5a2nAXFIfW/sVQky/EOxt3gZcpF1aoySqRwIxBgOkamyFsvcgBZgjDqmCcFwqSxvOQOtkJkwDIdrVsHfOHm4Sb2ZytGUFQaKts81W377fO0h91zhWnmFvD751o0wWv9UYOiExWDcOWThmS0OAdzmdqReQTyFKvpQNPDjkml9lnR0/1dOL8JJVB2hgP52wkhny6V62VusStF9kQk3H+TTDzw/iR8a140EaGXPNWjjm0yQdPfc7xAHonEjjFVAgMBAAECggEAec/qIPXZIF0CuTuEXKSr38gD5NpVmuPO38EPb0uJ96pgnuCzqMxRhmRN/Qv4ojfmn3UucH7BnJVMJtoeEy39NdtTfeo3aJS963vufNTQlf0NoARk1RElKt1XudPwwQlt2ABu0M/YTV4GlxGhyb3ohKoCN76x+si0MIhurIryovyabZCtlhGD2fg3V1t8RBlCEuz68FtB9fSh4zk7u6RhAL5LCOGNbVAiY4hx/NhrDiBfvQBhJZmPG+3gWjjZFgZEH5B0tGByuG2M+dj2qT5LFepkhGyI/upJwOhJrjiRrvR7LmSYCz0lI8/2fVCF8jN/TJav/1xVR82d/165Movm0QKBgQDZv/H1bhPoCoeh8z3ww8Um5FjFb1MMjmh4oB1d2+0QlYTbSVx6mOxBoh0yk+jKztotJyWs61nnHekOhdHFx9Ij1L8oMxybBK+heTuzl2WIs9/2CRBV4XfKMwNiYxJYkaXxUgeHx/2IVXTuFMKMrWhf7kxk2iFrK+Gv63oY0dmvhwKBgQDR0TWXRXC2qEqH/NV/6d24UHl4i/+UP1aKE9jA8xArJYBlKtTWCgM7g3/wxr0IRB6RocVupop/kZJ9RUFjprfaykDOj+A0oC+IDwUmGIjGbR4P921qjWEVQGIFSJvnIwHwGfEAPxvw0uW2tqz9C2GUZ9OB17lecfIdeJQX2Hb3QwKBgA9bWCclAkZlJ7emPgIS7H6XsCMMfODv0jJfqHKMJiX7RYlpnRoQWukuE70TbWGQQRbaIfAWERsZouwhR/AY7ZsVT/33zNap9/D9adZ6oPCJLwxdC0fjRN1/x4dS0WJpszhXvqw20Iyi6kI4OJhPSoMpfT3HnH/AcoRDqTLC6gVVAoGBAI3f9GfseZHZbERV75wF7HoEWI7tw41f4smNMAUQln9GZXKDKtXsgVEN00ZhbFMZlL4O8GyoyoAGVFLGsLeMdUfJeVbzrLyJEHrlBStEbcAW6rwLJ/5jySDQnzdJaLo7TsUnFXKAOgl24gPRtFmLB5mNN1TWJS86x2esMB+LrK33AoGADEDHIUtulc4zclLH9MJj7JcZPkgVz5llJ1jQj3fOu4iPc9TNvV2gV2kWU446gyMmRrQ2We1awnrjaeSzeFnf0OhL+yTzNUmRLMYWZhja/KMhr7b9vVRCCrysZJod+MWodEH+HIJlu9RGIxv7fNNy1S4yRU92OQU43XQ1S93eaEE=";
-//        // //2.2 获取Jwt的token
-//        // PrivateKey signPrivateKey = RsaUtils.getPrivateKey(JwtTokenUtils.class.getClassLoader().getResource("auth_rsa.pri").getFile());
-//        // PublicKey secretPublicKey = RsaUtils.getPublicKey(publicKeyStr.getBytes(StandardCharsets.UTF_8));
-//        // String token = generateTokenExpire(new User(1L, "zs"), signPrivateKey, 10, secretPublicKey);
-//        // System.out.println(token);
-//        // //2.3 解析Jwt的token里面内容
-//        // PublicKey signPublicKey = RsaUtils.getPublicKey(JwtTokenUtils.class.getClassLoader().getResource("auth_rsa.pub").getFile());
-//        // PrivateKey secretPrivateKey = RsaUtils.getPrivateKey(privateKeyStr.getBytes(StandardCharsets.UTF_8));
-//        // Payload<User> payload = getInfoFromToken(token, signPublicKey, User.class, secretPrivateKey);
-//        // System.out.println(payload);
+        // //2.加密Jwt验证
+        // //2.1 准备加密的密钥
+        // String publicKeyStr = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsnen01CdQc2zh/HihCNNYI6u7AFXf/NrZ/9auPvFsJcK1cWj5EFBU3lrts2OTvrmYVurhABg2g/Ya7glzUt6DwUojHOWtpwFxSH1v7FUJMvxDsbd4GXKRdWqMkqkcCMQYDpGpshbL3IAWYIw6pgnBcKksbzkDrZCZMAyHa1bB3zh5uEm9mcrRlBUGirbPNVt++3ztIfdc4Vp5hbw++daNMFr/VGDohMVg3Dlk4ZktDgHc5nakXkE8hSr6UDTw45JpfZZ0dP9XTi/CSVQdoYD+dsJIZ8uletlbrErRfZEJNx/k0w88P4kfGteNBGhlzzVo45tMkHT33O8QB6JxI4xVQIDAQAB";
+        // String privateKeyStr = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyd6fTUJ1BzbOH8eKEI01gjq7sAVd/82tn/1q4+8WwlwrVxaPkQUFTeWu2zY5O+uZhW6uEAGDaD9hruCXNS3oPBSiMc5a2nAXFIfW/sVQky/EOxt3gZcpF1aoySqRwIxBgOkamyFsvcgBZgjDqmCcFwqSxvOQOtkJkwDIdrVsHfOHm4Sb2ZytGUFQaKts81W377fO0h91zhWnmFvD751o0wWv9UYOiExWDcOWThmS0OAdzmdqReQTyFKvpQNPDjkml9lnR0/1dOL8JJVB2hgP52wkhny6V62VusStF9kQk3H+TTDzw/iR8a140EaGXPNWjjm0yQdPfc7xAHonEjjFVAgMBAAECggEAec/qIPXZIF0CuTuEXKSr38gD5NpVmuPO38EPb0uJ96pgnuCzqMxRhmRN/Qv4ojfmn3UucH7BnJVMJtoeEy39NdtTfeo3aJS963vufNTQlf0NoARk1RElKt1XudPwwQlt2ABu0M/YTV4GlxGhyb3ohKoCN76x+si0MIhurIryovyabZCtlhGD2fg3V1t8RBlCEuz68FtB9fSh4zk7u6RhAL5LCOGNbVAiY4hx/NhrDiBfvQBhJZmPG+3gWjjZFgZEH5B0tGByuG2M+dj2qT5LFepkhGyI/upJwOhJrjiRrvR7LmSYCz0lI8/2fVCF8jN/TJav/1xVR82d/165Movm0QKBgQDZv/H1bhPoCoeh8z3ww8Um5FjFb1MMjmh4oB1d2+0QlYTbSVx6mOxBoh0yk+jKztotJyWs61nnHekOhdHFx9Ij1L8oMxybBK+heTuzl2WIs9/2CRBV4XfKMwNiYxJYkaXxUgeHx/2IVXTuFMKMrWhf7kxk2iFrK+Gv63oY0dmvhwKBgQDR0TWXRXC2qEqH/NV/6d24UHl4i/+UP1aKE9jA8xArJYBlKtTWCgM7g3/wxr0IRB6RocVupop/kZJ9RUFjprfaykDOj+A0oC+IDwUmGIjGbR4P921qjWEVQGIFSJvnIwHwGfEAPxvw0uW2tqz9C2GUZ9OB17lecfIdeJQX2Hb3QwKBgA9bWCclAkZlJ7emPgIS7H6XsCMMfODv0jJfqHKMJiX7RYlpnRoQWukuE70TbWGQQRbaIfAWERsZouwhR/AY7ZsVT/33zNap9/D9adZ6oPCJLwxdC0fjRN1/x4dS0WJpszhXvqw20Iyi6kI4OJhPSoMpfT3HnH/AcoRDqTLC6gVVAoGBAI3f9GfseZHZbERV75wF7HoEWI7tw41f4smNMAUQln9GZXKDKtXsgVEN00ZhbFMZlL4O8GyoyoAGVFLGsLeMdUfJeVbzrLyJEHrlBStEbcAW6rwLJ/5jySDQnzdJaLo7TsUnFXKAOgl24gPRtFmLB5mNN1TWJS86x2esMB+LrK33AoGADEDHIUtulc4zclLH9MJj7JcZPkgVz5llJ1jQj3fOu4iPc9TNvV2gV2kWU446gyMmRrQ2We1awnrjaeSzeFnf0OhL+yTzNUmRLMYWZhja/KMhr7b9vVRCCrysZJod+MWodEH+HIJlu9RGIxv7fNNy1S4yRU92OQU43XQ1S93eaEE=";
+        // //2.2 获取Jwt的token
+        // PrivateKey signPrivateKey = RsaUtils.getPrivateKey(JwtTokenUtils.class.getClassLoader().getResource("auth_rsa.pri").getFile());
+        // PublicKey secretPublicKey = RsaUtils.getPublicKey(publicKeyStr.getBytes(StandardCharsets.UTF_8));
+        // String token = generateTokenExpire(new User(1L, "zs"), signPrivateKey, 10, secretPublicKey);
+        // System.out.println(token);
+        // //2.3 解析Jwt的token里面内容
+        // PublicKey signPublicKey = RsaUtils.getPublicKey(JwtTokenUtils.class.getClassLoader().getResource("auth_rsa.pub").getFile());
+        // PrivateKey secretPrivateKey = RsaUtils.getPrivateKey(privateKeyStr.getBytes(StandardCharsets.UTF_8));
+        // Payload<User> payload = getInfoFromToken(token, signPublicKey, User.class, secretPrivateKey);
+        // System.out.println(payload);
 //    }
 
 }

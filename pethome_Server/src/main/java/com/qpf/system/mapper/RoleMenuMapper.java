@@ -24,10 +24,4 @@ public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
      * @return
      */
     List<RoleMenu> findByPage(@Param("page") IPage<RoleMenu> page,@Param("ew") QueryWrapper<RoleMenu> queryWrapper);
-    /**
-     * 根据角色ID，查询角色所拥有的菜单
-     * @param roleId 角色id
-     * @return
-     */
-    List<Long> findMenuIdByRoleId(Long roleId);
 }

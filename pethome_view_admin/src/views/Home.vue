@@ -101,23 +101,22 @@
 			handleselect: function (a, b) {
 			},
 			//退出登录
-			logout: function () {
-				var _this = this;
-				this.$confirm('确认退出吗?', '提示', {
-					//type: 'warning'
-				}).then(() => {
-					// sessionStorage.removeItem('user');
+//退出登录
+      logout: function () {
+        this.$confirm('确认退出吗?', '提示', {
+          //type: 'warning'
+        }).then(() => { //点击确认
+          //前端的处理
           localStorage.removeItem('token');
           localStorage.removeItem('logininfo');
           localStorage.removeItem('permissions');
           localStorage.removeItem('menus');
-					_this.$router.push('/login');
-				}).catch(() => {
-
-				});
-
-
-			},
+          //后端需要处理：redis中的登录信息删除 - token - 不做 - 后面要改
+          //跳转到登录页面
+          this.$router.push('/login');
+        }).catch(() => { //点击取消
+        });
+      },
 			//折叠导航栏
 			collapse:function(){
 				this.collapsed=!this.collapsed;

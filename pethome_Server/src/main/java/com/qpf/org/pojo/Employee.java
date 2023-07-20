@@ -38,7 +38,7 @@ public class Employee {
     @TableField(exist = false)
     private Department dept;
     //登录信息id
-    private Long loginInfoId;
+    private Long logininfoId;
     //所属角色们(员工可以有多个角色)
     @TableField(exist = false)
     private List<Long> roleIds;

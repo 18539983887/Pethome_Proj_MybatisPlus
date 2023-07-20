@@ -7,10 +7,10 @@
           <el-input v-model="keyword" placeholder="请输入关键字"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="keywordQuery"  v-perm="'department:list'">查询</el-button>
+          <el-button type="primary" v-on:click="keywordQuery" v-perm="'department:list'">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-perm="'department:save'"@click="handleAdd">新增</el-button>
+          <el-button type="primary" v-perm="'department:save'" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -42,8 +42,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" v-perm="'department:update'" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="danger" size="small" v-perm="'department:delete'" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

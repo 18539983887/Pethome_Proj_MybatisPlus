@@ -56,6 +56,7 @@ export default {
           this.$http.post("/login/account", this.loginForm).then(res => {
             if (res.data.success) {//登录成功
               //1.显示成功信息
+
               this.$message({
                 message: "登录成功",
                 type: 'success'
@@ -68,9 +69,10 @@ export default {
               localStorage.setItem("logininfo", JSON.stringify(logininfo));
               localStorage.setItem("menus", JSON.stringify(menus));
               localStorage.setItem("permissions", JSON.stringify(permissions));
+
               //3.跳转到首页
-              location.reload();
               this.$router.push({path: '/echarts'});
+              location.reload();
             } else {//登录失败
               this.$message({
                 message: res.data.message,
