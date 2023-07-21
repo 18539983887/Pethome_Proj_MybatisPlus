@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qpf.pet.mapper.PetOnlineAuditLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="petOnlineAuditLogResultMap" type="com.qpf.pet.pojo.PetOnlineAuditLog">
+                <result column="pet_id" property="petId"/>
+                <result column="state" property="state"/>
+                <result column="audit_id" property="auditId"/>
+                <result column="audit_time" property="auditTime"/>
+                <result column="note" property="note"/>
+    </resultMap>
+
+    <select id="findByPage" resultMap="petOnlineAuditLogResultMap">
+        select * from t_pet_online_audit_log
+        <if test="ew != null and ew != ''">
+            ${ew.customSqlSegment}
+        </if>
+        <!--&lt;!&ndash; 如果配置了MybatisPlus的分页插件,则该操作不需要&ndash;&gt;-->
+        <!--<if test="page != null">-->
+        <!--    limit ${(page.current - 1) * page.size}, #{page.size}-->
+        <!--</if>-->
+    </select>
+
+
+</mapper>

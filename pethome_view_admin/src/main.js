@@ -1,4 +1,9 @@
 import babelpolyfill from 'babel-polyfill'
+//引入百度地图
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+    ak: 'KenYIG9umULuo1XA9GewmzWz9r4AQQty'
+})
 import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui';
@@ -16,6 +21,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import '@/common/js/permission'
 //引入axios
 import axios from 'axios'
+
 //配置axios的全局基本路径，访问后端接口使用8080
 axios.defaults.baseURL='http://localhost:8080/'
 //全局属性配置，在任意组件内可以使用this.$http获取axios对象

@@ -15,7 +15,7 @@
     <script src="./AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
     <script src="./AmazeUI-2.4.2/assets/js/amazeui.js"></script>
     <!-- 引入百度地图 -->
-    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=LSNHTIDvIKtkv7UgAUKfStSz4QU74osS"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=90Q5znSoGAUUdSHV91eeTN6G5WmzlXw2"></script>
 
     <!-- 引入vue和axios -->
     <script src="/js/plugins/vue/dist/vue.js"></script>
@@ -35,7 +35,7 @@
                     <ul class="message-l">
                         <div class="topMessage">
                             <div class="menu-hd" v-if="logininfo">
-                                欢迎【{{logininfo.username||logininfo.phone||logininfo.email}}】登录成功
+                                欢迎【{{logininfo.username || logininfo.phone || logininfo.email}}】登录成功
                             </div>
                             <div class="menu-hd" v-else>
                                 <a href="#" target="_top" class="h">亲，请登录</a>
@@ -87,9 +87,10 @@
         <div class="nav-cont">
             <ul>
                 <li class="index"><a href="index.html" target="_blank">商城</a></li>
-                <li class="qc"><a href="product.html" target="_blank" >服务</a></li>
+                <li class="qc"><a href="product.html" target="_blank">服务</a></li>
                 <li class="qc"><a href="product.html" target="_blank">领养</a></li>
-                <li class="qc"><a href="https://baike.baidu.com/item/%E5%AE%A0%E7%89%A9/229020" target="_blank">百科</a></li>
+                <li class="qc"><a href="https://baike.baidu.com/item/%E5%AE%A0%E7%89%A9/229020" target="_blank">百科</a>
+                </li>
                 <li class="qc"><a href="aboutUs.html" target="_blank">关于我们</a></li>
                 <li class="qc last"><a href="aboutUs.html" target="_blank">加入我们</a></li>
             </ul>
@@ -111,7 +112,8 @@
                             <div class="am-form-group">
                                 <label for="pet-title" class="am-form-label">标题</label>
                                 <div class="am-form-content">
-                                    <input type="text" v-model="searchMasterMsg.title" id="pet-title" placeholder="title">
+                                    <input type="text" v-model="searchMasterMsg.title" id="pet-title"
+                                           placeholder="title">
                                 </div>
                             </div>
 
@@ -127,7 +129,8 @@
                                 <label class="am-form-label">性别</label>
                                 <div class="am-form-content sex">
                                     <label class="am-radio-inline">
-                                        <input checked="checked" v-model="searchMasterMsg.gender" type="radio" name="radio10"
+                                        <input checked="checked" v-model="searchMasterMsg.gender" type="radio"
+                                               name="radio10"
                                                value="1" data-am-ucheck> 公
                                     </label>
                                     <label class="am-radio-inline">
@@ -146,7 +149,8 @@
                             <div class="am-form-group">
                                 <label for="pet-price" class="am-form-label">价格</label>
                                 <div class="am-form-content">
-                                    <input type="text" v-model="searchMasterMsg.price" id="pet-price" placeholder="price">
+                                    <input type="text" v-model="searchMasterMsg.price" id="pet-price"
+                                           placeholder="price">
                                 </div>
                             </div>
                             <div class="am-form-group">
@@ -161,7 +165,8 @@
                             <div class="am-form-group">
                                 <label for="pet-type" class="am-form-label">品种</label>
                                 <div class="am-form-content">
-                                    <input type="text" v-model="searchMasterMsg.petType" id="pet-type" placeholder="type">
+                                    <input type="text" v-model="searchMasterMsg.petType" id="pet-type"
+                                           placeholder="type">
                                 </div>
                             </div>
                             <!--private String resources;-->
@@ -174,10 +179,13 @@
                             </div>
                             <div id="file-list"></div>
                             <!--private String address;-->
-                            <div class="am-form-group">
+                            <div class="am-form-group" style="height: 300px" >
                                 <label for="suggestId" class="am-form-label">地址</label>
-                                <div class="am-form-content">
-                                    <input type="text" id="suggestId" v-model="searchMasterMsg.address" placeholder="请输入地址">
+                                <div class="am-form-content" >
+                                    <input type="text" id="suggestId" v-model="searchMasterMsg.address"
+                                           placeholder="请输入地址">
+                                    <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                                    <div id="l-map" style="height: 260px"></div>
                                 </div>
                             </div>
 
@@ -252,19 +260,19 @@
             }
         },
         methods: {
-            publish(){
+            publish() {
                 //string - boolean不行  那就string - int - boolean就可以了 1==true，0==false
-                if(this.searchMasterMsg.gender){
+                if (this.searchMasterMsg.gender) {
                     this.searchMasterMsg.gender = parseInt(this.searchMasterMsg.gender);
                 }
-                this.$http.post("/searchMasterMsg/publish",this.searchMasterMsg).then(result=>{
+                this.$http.post("/searchMasterMsg/publish", this.searchMasterMsg).then(result => {
                     //发布成功后就跳转到主页
-                        result = result.data;
-                        if(result.success){
-                            alert("发布成功！");
-                            location.href = "/index.html";
-                        }else{
-                            alert(result.message);
+                    result = result.data;
+                    if (result.success) {
+                        alert("发布成功！");
+                        location.href = "/index.html";
+                    } else {
+                        alert(result.message);
                     }
                 }).catch(res => {
                     alert("系统错误");
@@ -273,63 +281,63 @@
         },
         mounted() {
             let logininfo = localStorage.getItem("logininfo");
-            if(logininfo){
+            if (logininfo) {
                 this.logininfo = JSON.parse(logininfo);
             }
         }
 
     });
 </script>
+<!--//拷贝js-->
+
 <script type="text/javascript">
     // 百度地图API功能
     function G(id) {
         return document.getElementById(id);
     }
 
-    var map = new BMap.Map(""); //没有1-map就删除掉，但是必须传递一个值，空字符串都行
-    //设置了初始化地图不会触发下拉鼠标下拉事件：中心点偏移
-    //map.centerAndZoom("成都",12); // 初始化地图,设置城市和地图级别。
-
+    var map = new BMap.Map("l-map");
+    map.centerAndZoom("郑州", 12);
     var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-        {"input" : "suggestId"
-            ,"location" : map
+        {
+            "input": "suggestId"
+            , "location": map
         });
 
-    ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+    ac.addEventListener("onhighlight", function (e) {  //鼠标放在下拉列表上的事件
         var str = "";
         var _value = e.fromitem.value;
         var value = "";
         if (e.fromitem.index > -1) {
-            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+            value = _value.province + _value.city + _value.district + _value.street + _value.business;
         }
         str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
 
         value = "";
         if (e.toitem.index > -1) {
             _value = e.toitem.value;
-            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+            value = _value.province + _value.city + _value.district + _value.street + _value.business;
         }
         str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-        //G("searchResultPanel").innerHTML = str;
+        G("searchResultPanel").innerHTML = str;
     });
 
     var myValue;
-    ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+    ac.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
         var _value = e.item.value;
-        myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-        //G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
-        //将百度地图的地址赋值给 数据模型
-        vue.searchMasterMsg.address = myValue;
+        myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+        G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
         setPlace();
     });
 
-    function setPlace(){
+    function setPlace() {
         map.clearOverlays();    //清除地图上所有覆盖物
-        function myFun(){
+        function myFun() {
             var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
             map.centerAndZoom(pp, 18);
             map.addOverlay(new BMap.Marker(pp));    //添加标注
         }
+
         var local = new BMap.LocalSearch(map, { //智能搜索
             onSearchComplete: myFun
         });
